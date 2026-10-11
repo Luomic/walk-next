@@ -148,14 +148,14 @@ const selectedRouteLabel = computed(() => {
 const matchActions = computed<ActionSheetAction[]>(() =>
   MATCH_OPTIONS.map((option) => ({
     name: t(option.label),
-    color: option.value === formValue.allowMatch ? "#1989fa" : undefined
+    icon: option.value === formValue.allowMatch ? "success" : undefined
   }))
 );
 
 const routeActions = computed<ActionSheetAction[]>(() =>
   ROUTE_OPTIONS.map((option) => ({
     name: t(option.label),
-    color: option.value === formValue.routeName ? "#1989fa" : undefined
+    icon: option.value === formValue.routeName ? "success" : undefined
   }))
 );
 

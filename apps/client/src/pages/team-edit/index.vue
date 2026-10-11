@@ -1,27 +1,27 @@
 <template>
   <div :class="styles.page">
-    <error-empty
-      :error="teamDetail ? undefined : error"
-      :disabled="isLoading || Boolean(teamDetail)"
-      :btn-text="t('重试')"
-      @btn-click="refetch"
-    >
-      <loading-container
-        :class="styles.loadingContainer"
-        :loading="isLoading && !teamDetail"
-        :text="t('refresh.loading')"
+    <loading-container :loading="isTeamDetailFetching" :text="t('refresh.loading')">
+      <error-empty
+        :error="teamDetail ? undefined : error"
+        :disabled="isTeamDetailFetching || Boolean(teamDetail)"
+        :btn-text="t('重试')"
+        @btn-click="refetch"
       >
-        <van-empty v-if="!teamDetail && !isLoading" :description="t('暂无团队详细信息')" />
+        <van-empty
+          v-if="!teamDetail && !isTeamDetailFetching"
+          :description="t('暂无团队详细信息')"
+        />
 
         <div v-else-if="teamDetail" :class="styles.content">
           <team-edit-form
             :initial-value="initialFormValue"
             :loading="isUpdateTeamInfoPending"
+            :submitted="teamDetail.submitted"
             @submit="handleFormSubmit"
           />
         </div>
-      </loading-container>
-    </error-empty>
+      </error-empty>
+    </loading-container>
   </div>
 </template>
 
@@ -47,7 +47,7 @@ const { t } = useI18n();
 
 const {
   data: teamDetail,
-  isLoading,
+  isFetching: isTeamDetailFetching,
   error,
   refetch
 } = useQuery({

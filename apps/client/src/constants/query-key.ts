@@ -19,6 +19,8 @@ export const CLIENT_QUERY_KEY = {
     /** 队员详情 */
     MEMBER: "teamMember",
     /** 随机组队列表 */
-    RANDOM_LIST: "randomTeamList"
+    RANDOM_LIST: "randomTeamList",
+    /** 当天路线名额 */
+    QUOTA: "teamQuota"
   }
 } as const;
