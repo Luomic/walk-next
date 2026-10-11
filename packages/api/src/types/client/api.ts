@@ -61,13 +61,23 @@ export interface QueryUserInfoResponse {
   wechat: string;
 }
 
-/** 获取当前阶段 请求 */
+/** 获取各业务阶段时间 请求 */
 export type QueryPhaseRequest = undefined;
 
-/** 获取当前阶段 响应 */
-export interface QueryPhaseResponse {
-  /** 当前毅行阶段，空字符串表示活动未激活 */
+/** 业务阶段时间项 */
+export interface PhaseTimeItem {
+  /** 业务阶段枚举值 */
   phase: WalkPhase;
+  /** 开始时间，格式为 YYYY-MM-DD HH:mm:ss */
+  start: string;
+  /** 结束时间，格式为 YYYY-MM-DD HH:mm:ss */
+  end: string;
+}
+
+/** 获取各业务阶段时间 响应 */
+export interface QueryPhaseResponse {
+  /** 各业务阶段的起止时间，按业务顺序排列 */
+  phases: PhaseTimeItem[];
 }
 
 /** 通知信息 */

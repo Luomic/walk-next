@@ -34,32 +34,13 @@
 </template>
 
 <script setup lang="ts">
-import { useQuery } from "@tanstack/vue-query";
 import { ErrorEmpty, LoadingContainer } from "shared";
-import { computed } from "vue";
 
-import { CLIENT_QUERY_KEY } from "@/constants";
-import { INACTIVE_WALK_STAGE, WALK_STAGES } from "@/constants/walk-progress";
-import { walkClientService } from "@/utils";
+import { useWalkPhaseConfig } from "@/composables";
+import { WALK_STAGES } from "@/constants/walk-progress";
 
 import styles from "./index.module.scss";
 
-const {
-  data: phaseData,
-  isPending: isPhaseLoading,
-  error: phaseError,
-  refetch: refetchPhase
-} = useQuery({
-  queryKey: [CLIENT_QUERY_KEY.USER.PHASE] as const,
-  queryFn: () => walkClientService.QueryPhase()
-});
-
-/** 当前阶段序号，-1 表示不在活动时期内，步骤条无高亮 */
-const currentStageIndex = computed(() =>
-  WALK_STAGES.findIndex((stage) => stage.phase === phaseData.value?.phase)
-);
-
-const currentStage = computed(
-  () => WALK_STAGES.find((stage) => stage.phase === phaseData.value?.phase) ?? INACTIVE_WALK_STAGE
-);
+const { currentStage, currentStageIndex, isPhaseLoading, phaseError, refetchPhase } =
+  useWalkPhaseConfig();
 </script>
