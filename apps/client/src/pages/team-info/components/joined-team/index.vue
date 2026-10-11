@@ -27,6 +27,7 @@
               block
               round
               type="primary"
+              plain
               :disabled="!teamDetail"
               @click="isShareSheetShow = true"
             >
@@ -46,6 +47,7 @@
               block
               round
               type="primary"
+              plain
               :loading="isSubmitTeamPending || isUndoTeamSubmissionPending"
               :disabled="isTeamDetailLoading"
               @click="handleSubmissionClick"
@@ -271,7 +273,7 @@ const { mutateAsync: mutateLeaveTeam, isPending: isLeaveTeamPending } = useMutat
 const { mutateAsync: mutateRemoveMember, isPending: isRemoveMemberPending } = useMutation({
   mutationFn: (memberId: number) => walkClientService.RemoveTeamMember({ id: memberId }),
   onError: (error) => {
-    showErrorToast(error.message || t("删除失败，请稍后重试"));
+    showErrorToast(error.message || t("移出失败，请稍后重试"));
   }
 });
 
@@ -310,11 +312,11 @@ const handleMemberPopupClose = () => {
   selectedMemberId.value = undefined;
 };
 
-// MARK: 删除队员
+// MARK: 移出团队
 const handleRemoveMemberClick = (memberId: number) => {
   void showConfirmDialog({
-    title: t("删除队员"),
-    message: t("确认将该队员移出队伍吗？"),
+    title: t("移出团队"),
+    message: t("确认将该队员移出团队吗？"),
     theme: "round-button",
     beforeClose: async (action) => {
       if (action !== "confirm") return true;
@@ -329,7 +331,7 @@ const handleRemoveMemberClick = (memberId: number) => {
   })
     .then(async () => {
       handleMemberPopupClose();
-      showSuccessToast({ message: t("删除成功") });
+      showSuccessToast({ message: t("移出成功") });
       await refreshTeamData();
     })
     .catch(() => undefined);

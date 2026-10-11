@@ -38,9 +38,21 @@ html {
     @include card-container;
   }
 
-  .van-button--default:not(.van-button--plain):not(.van-button--small),
-  .van-button--primary:not(.van-button--plain):not(.van-button--small) {
+  .van-button:not(
+    .van-button--small,
+    .van-action-bar-button,
+    .van-dialog__confirm,
+    .van-dialog__cancel
+  ) {
     @include custom-button;
+  }
+
+  .van-back-top {
+    --van-back-top-background: #734a23;
+  }
+
+  .van-tag--primary {
+    --van-tag-primary-color: #734a23;
   }
 
   .van-radio {

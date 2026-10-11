@@ -1,5 +1,5 @@
 <template>
-  <van-cell-group inset :class="styles.card">
+  <van-cell-group inset>
     <template #title>
       <div :class="styles.sectionTitle">
         <van-icon name="friends-o" />
@@ -29,7 +29,15 @@
     <van-cell :title="t('当前位置')" :value="t(props.team.latest_point_name) || t('未开始')" />
   </van-cell-group>
 
-  <van-button v-if="props.canEdit" block round type="primary" @click="handleEditClick">
+  <van-button
+    v-if="props.canEdit"
+    block
+    round
+    plain
+    type="primary"
+    :class="styles.editButton"
+    @click="handleEditClick"
+  >
     {{ t("修改信息") }}
   </van-button>
 </template>

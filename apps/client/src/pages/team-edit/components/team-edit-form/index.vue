@@ -57,7 +57,7 @@
       </van-cell-group>
 
       <div :class="styles.submitArea">
-        <van-button block round type="primary" native-type="submit" :loading="props.loading">
+        <van-button block round plain type="primary" native-type="submit" :loading="props.loading">
           {{ t("更新信息") }}
         </van-button>
       </div>
@@ -187,7 +187,7 @@ const selectedRouteLabel = computed(() =>
 const matchActions = computed<ActionSheetAction[]>(() =>
   MATCH_OPTIONS.map((option) => ({
     name: t(option.label),
-    icon: option.value === formValue.allowMatch ? "success" : undefined
+    color: option.value === formValue.allowMatch ? "#734a23" : undefined
   }))
 );
 
@@ -204,7 +204,7 @@ const routeActions = computed<ActionSheetAction[]>(() =>
       option.value !== formValue.routeName;
     return {
       name: t(option.label),
-      icon: option.value === formValue.routeName ? "success" : undefined,
+      color: option.value === formValue.routeName ? "#734a23" : undefined,
       disabled: isRouteDisabled,
       subname: isRouteDisabled ? t("该路线名额已满") : undefined
     };
