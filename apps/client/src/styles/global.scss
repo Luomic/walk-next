@@ -39,12 +39,12 @@ html {
   }
 
   :is(
-    .van-button--default,
-    .van-button--primary,
-    .van-button--danger,
-    .van-button--warning,
-    .van-button--success
-  ):not(.van-button--small) {
+      .van-button--default,
+      .van-button--primary,
+      .van-button--danger,
+      .van-button--warning,
+      .van-button--success
+    ):not(.van-button--small):not(.van-action-bar-button) {
     @include custom-button;
   }
 
