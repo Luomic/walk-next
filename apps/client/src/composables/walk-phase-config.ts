@@ -31,9 +31,16 @@ const syncFromPhases = (phases: PhaseTimeItem[]): SyncResult => {
   let tolerantPhase: WalkPhase | null = null;
   let nextBoundary: number | null = null;
 
+  const considerBoundary = (ms: number) => {
+    if (nowMs < ms && (nextBoundary == null || ms < nextBoundary)) {
+      nextBoundary = ms;
+    }
+  };
+
   for (const p of phases) {
-    const startMs = Date.parse(p.start);
-    const endMs = Date.parse(p.end);
+    // 将空格分隔的日期时间规范化为 ISO 格式，避免 WebKit 上 Date.parse 返回 NaN
+    const startMs = Date.parse(p.start.replace(" ", "T"));
+    const endMs = Date.parse(p.end.replace(" ", "T"));
 
     // 跳过无效日期
     if (Number.isNaN(startMs) || Number.isNaN(endMs)) continue;
@@ -43,12 +50,9 @@ const syncFromPhases = (phases: PhaseTimeItem[]): SyncResult => {
     } else if (startMs <= nowMs && nowMs <= endMs + PHASE_END_TOLERANCE) {
       tolerantPhase = p.phase;
     }
-    if (nowMs < startMs && (nextBoundary == null || startMs < nextBoundary)) {
-      nextBoundary = startMs;
-    }
-    if (nowMs < endMs && (nextBoundary == null || endMs < nextBoundary)) {
-      nextBoundary = endMs;
-    }
+    considerBoundary(startMs);
+    considerBoundary(endMs);
+    considerBoundary(endMs + PHASE_END_TOLERANCE);
   }
 
   return { currentPhase: exactPhase ?? tolerantPhase, nextBoundary };

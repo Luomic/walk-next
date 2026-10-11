@@ -196,14 +196,17 @@ const routeActions = computed<ActionSheetAction[]>(() =>
     const quotaItem = quotaData.value?.routes.find(
       (routeData) => routeData.route_name === option.value
     );
-    /** 路线是否不可选 */
-    const isRouteDisabled = props.submitted && quotaItem && !quotaItem.available;
+    /** 路线是否不可选（当前已选路线即使满额也保持可选） */
+    const isRouteDisabled =
+      props.submitted &&
+      Boolean(quotaItem) &&
+      !quotaItem?.available &&
+      option.value !== formValue.routeName;
     return {
       name: t(option.label),
       icon: option.value === formValue.routeName ? "success" : undefined,
       disabled: isRouteDisabled,
-      subname:
-        isRouteDisabled && option.value !== formValue.routeName ? t("该路线名额已满") : undefined
+      subname: isRouteDisabled ? t("该路线名额已满") : undefined
     };
   })
 );
