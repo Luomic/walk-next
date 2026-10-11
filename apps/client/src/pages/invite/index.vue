@@ -6,7 +6,7 @@
         <team-card v-if="teamInfo" :class="styles.card" :team="teamInfo">
           <div :class="styles.actionArea">
             <van-button
-              v-if="isLoggedIn"
+              v-if="canSubmitJoin"
               block
               type="primary"
               :disabled="isJoinDisabled"
@@ -16,8 +16,15 @@
               {{ $t("确认加入") }}
             </van-button>
 
+            <template v-else-if="isLoggedIn">
+              <p :class="styles.hint">{{ joinedTeamHint }}</p>
+              <van-button block type="primary" @click="goToTeamInfo">
+                {{ $t("查看我的团队") }}
+              </van-button>
+            </template>
+
             <template v-else>
-              <p :class="styles.loginHint">{{ $t("登录后即可加入队伍") }}</p>
+              <p :class="styles.hint">{{ $t("登录后即可加入队伍") }}</p>
               <div :class="styles.authActions">
                 <van-button block round type="primary" @click="handleLoginClick">
                   {{ $t("登录") }}
@@ -99,8 +106,19 @@ useOverrideTitle(
   )
 );
 
+const canSubmitJoin = computed(() => {
+  const role = clientUserInfo.value?.role;
+  return isLoggedIn.value && role !== "member" && role !== "captain";
+});
+
 const isJoinDisabled = computed(
   () => clientUserInfo.value?.role !== "unbind" || teamInfo.value?.is_full === true
+);
+
+const joinedTeamHint = computed(() =>
+  clientUserInfo.value?.team_id === teamId.value
+    ? t("你已在该队伍中")
+    : t("你已加入其他队伍，需先退出才能加入新队伍")
 );
 
 const { mutate: mutateJoinTeam, isPending: isJoinPending } = useMutation({
@@ -123,7 +141,7 @@ const { mutate: mutateJoinTeam, isPending: isJoinPending } = useMutation({
 
     updateUserInfo(userInfo);
 
-    router.replace({ name: "team-info" });
+    goToTeamInfo();
   },
   onError: (error) => {
     if (error instanceof RequestError && error.code === RESP_CODE.NO_JOIN_CHANCE) {
@@ -145,5 +163,9 @@ const handleLoginClick = () => {
 
 const handleRegisterClick = () => {
   router.push({ name: "register", query: redirectQuery.value });
+};
+
+const goToTeamInfo = () => {
+  router.replace({ name: "team-info" });
 };
 </script>
