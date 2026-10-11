@@ -1,9 +1,13 @@
 .page {
-  :global(.error-empty) {
-    min-height: calc(100vh - 56px);
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  :global(.loading-container) {
+    flex: 1;
   }
 
-  .loadingContainer {
-    min-height: 220px;
+  .content {
+    padding: 16px;
   }
 }

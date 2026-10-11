@@ -1,3 +1,7 @@
+@use "@/styles/mixins" as ui;
+
+@include ui.action-sheet-align;
+
 .submitArea {
   margin-top: 32px;
 }

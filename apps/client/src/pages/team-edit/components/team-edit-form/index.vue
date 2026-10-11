@@ -1,98 +1,104 @@
 <template>
-  <van-form ref="formRef" :disabled="props.loading" @submit="handleSubmit">
-    <van-cell-group inset>
-      <van-field
-        v-model="formValue.name"
-        :rules="createRequiredRuleWithMessage(t('请输入团队名称'))"
-        :label="t('团队名称')"
-        name="name"
-        maxlength="64"
-        :placeholder="t('请输入名称')"
-        autocomplete="off"
-      />
+  <loading-container :loading="isQuotaFetching" :text="t('refresh.loading')">
+    <van-form ref="formRef" :disabled="props.loading" @submit="handleSubmit">
+      <van-cell-group inset>
+        <van-field
+          v-model="formValue.name"
+          :rules="createRequiredRuleWithMessage(t('请输入团队名称'))"
+          :label="t('团队名称')"
+          name="name"
+          maxlength="64"
+          :placeholder="t('请输入名称')"
+          autocomplete="off"
+        />
 
-      <van-field
-        v-model="formValue.slogan"
-        :rules="createRequiredRuleWithMessage(t('请输入团队口号'))"
-        :label="t('团队口号')"
-        name="slogan"
-        maxlength="128"
-        show-word-limit
-        :placeholder="t('请输入口号')"
-        autocomplete="off"
-      />
+        <van-field
+          v-model="formValue.slogan"
+          :rules="createRequiredRuleWithMessage(t('请输入团队口号'))"
+          :label="t('团队口号')"
+          name="slogan"
+          maxlength="128"
+          show-word-limit
+          :placeholder="t('请输入口号')"
+          autocomplete="off"
+        />
 
-      <van-field
-        v-model="formValue.password"
-        :rules="createRequiredRuleWithMessage(t('请输入团队密码'))"
-        :label="t('团队密码')"
-        name="password"
-        maxlength="64"
-        :placeholder="t('请输入密码')"
-        autocomplete="off"
-      />
+        <van-field
+          v-model="formValue.password"
+          :rules="createRequiredRuleWithMessage(t('请输入团队密码'))"
+          :label="t('团队密码')"
+          name="password"
+          maxlength="64"
+          :placeholder="t('请输入密码')"
+          autocomplete="off"
+        />
 
-      <van-field
-        :model-value="selectedMatchLabel"
-        :error-message="selectErrors.allowMatch"
-        :label="t('是否随机队友')"
-        :placeholder="t('请选择')"
-        readonly
-        clickable
-        is-link
-        @click="toggleSelect('match')"
-      />
+        <van-field
+          :model-value="selectedMatchLabel"
+          :error-message="selectErrors.allowMatch"
+          :label="t('是否随机队友')"
+          :placeholder="t('请选择')"
+          readonly
+          clickable
+          is-link
+          @click="toggleSelect('match')"
+        />
 
-      <van-field
-        :model-value="selectedRouteLabel"
-        :error-message="selectErrors.routeName"
-        :label="t('路线选择')"
-        :placeholder="t('请选择')"
-        readonly
-        clickable
-        is-link
-        @click="toggleSelect('route')"
-      />
-    </van-cell-group>
+        <van-field
+          :model-value="selectedRouteLabel"
+          :error-message="selectErrors.routeName"
+          :label="t('路线选择')"
+          :placeholder="t('请选择')"
+          readonly
+          clickable
+          is-link
+          @click="toggleSelect('route')"
+        />
+      </van-cell-group>
 
-    <div :class="styles.submitArea">
-      <van-button block round plain type="primary" native-type="submit" :loading="props.loading">
-        {{ t("更新信息") }}
-      </van-button>
-    </div>
-  </van-form>
+      <div :class="styles.submitArea">
+        <van-button block round plain type="primary" native-type="submit" :loading="props.loading">
+          {{ t("更新信息") }}
+        </van-button>
+      </div>
+    </van-form>
 
-  <van-action-sheet
-    :show="openedSelect === 'match'"
-    :actions="matchActions"
-    :title="t('是否随机队友')"
-    :cancel-text="t('取消')"
-    :closeable="false"
-    close-on-click-action
-    @select="handleMatchSelect"
-    @cancel="closeSelect"
-    @update:show="handleShowUpdate"
-  />
+    <van-action-sheet
+      :show="openedSelect === 'match'"
+      :actions="matchActions"
+      :title="t('是否随机队友')"
+      :cancel-text="t('取消')"
+      :closeable="false"
+      close-on-click-action
+      @select="handleMatchSelect"
+      @cancel="closeSelect"
+      @update:show="handleShowUpdate"
+    />
 
-  <van-action-sheet
-    :show="openedSelect === 'route'"
-    :actions="routeActions"
-    :title="t('路线选择')"
-    :cancel-text="t('取消')"
-    :closeable="false"
-    close-on-click-action
-    @select="handleRouteSelect"
-    @cancel="closeSelect"
-    @update:show="handleShowUpdate"
-  />
+    <van-action-sheet
+      :show="openedSelect === 'route'"
+      :actions="routeActions"
+      :title="t('路线选择')"
+      :cancel-text="t('取消')"
+      :closeable="false"
+      close-on-click-action
+      @select="handleRouteSelect"
+      @cancel="closeSelect"
+      @update:show="handleShowUpdate"
+    />
+  </loading-container>
 </template>
 
 <script setup lang="ts">
+import { useQuery } from "@tanstack/vue-query";
 import { watchImmediate } from "@vueuse/core";
-import { createRequiredRuleWithMessage } from "shared";
+import { createRequiredRuleWithMessage, LoadingContainer } from "shared";
 import type { ActionSheetAction, FormInstance } from "vant";
 import { computed, reactive, ref, useTemplateRef } from "vue";
 import { useI18n } from "vue-i18n";
+
+import { CLIENT_QUERY_KEY } from "@/constants";
+import { walkClientService } from "@/utils";
 
 import type {
   MatchValue,
@@ -106,6 +112,7 @@ import styles from "./index.module.scss";
 const props = defineProps<{
   loading: boolean;
   initialValue: TeamEditFormRawValue;
+  submitted: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -113,6 +120,17 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+
+// 查询路线是否有名额
+const {
+  data: quotaData,
+  isFetching: isQuotaFetching,
+  refetch: refetchQuota
+} = useQuery({
+  queryKey: [CLIENT_QUERY_KEY.TEAM.QUOTA] as const,
+  queryFn: () => walkClientService.QueryTeamQuota(),
+  enabled: false
+});
 
 // #region 选项与表单状态
 const MATCH_OPTIONS = [
@@ -174,16 +192,38 @@ const matchActions = computed<ActionSheetAction[]>(() =>
 );
 
 const routeActions = computed<ActionSheetAction[]>(() =>
-  ROUTE_OPTIONS.map((option) => ({
-    name: t(option.label),
-    color: option.value === formValue.routeName ? "#734a23" : undefined
-  }))
+  ROUTE_OPTIONS.map((option) => {
+    const quotaItem = quotaData.value?.routes.find(
+      (routeData) => routeData.route_name === option.value
+    );
+    /** 路线是否不可选（当前已选路线即使满额也保持可选） */
+    const isRouteDisabled =
+      props.submitted &&
+      Boolean(quotaItem) &&
+      !quotaItem?.available &&
+      option.value !== formValue.routeName;
+    return {
+      name: t(option.label),
+      color: option.value === formValue.routeName ? "#734a23" : undefined,
+      disabled: isRouteDisabled,
+      subname: isRouteDisabled ? t("该路线名额已满") : undefined
+    };
+  })
 );
 // #endregion
 
 // #region 交互与提交
-const toggleSelect = (selectName: OpenedTeamEditSelect) => {
-  openedSelect.value = openedSelect.value === selectName ? "" : selectName;
+const toggleSelect = async (selectName: OpenedTeamEditSelect) => {
+  if (openedSelect.value === selectName) {
+    openedSelect.value = "";
+    return;
+  }
+
+  if (selectName === "route" && props.submitted) {
+    await refetchQuota();
+  }
+
+  openedSelect.value = selectName;
 };
 
 const closeSelect = () => {

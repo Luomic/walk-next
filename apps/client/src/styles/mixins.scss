@@ -152,6 +152,21 @@
   border: 0;
 }
 
+/// ActionSheet 选项图标对齐
+/// 当同一 action sheet 中部分选项有图标、部分无图标时，使用此 mixin 对齐文字
+@mixin action-sheet-align {
+  :global(.van-action-sheet__item:has(.van-action-sheet__item-icon))::after {
+    content: "";
+    display: block;
+    width: 1em;
+    margin-left: var(--van-action-sheet-item-icon-margin-right);
+  }
+
+  :global(.van-action-sheet__item--disabled) {
+    opacity: 0.5;
+  }
+}
+
 /// 隐私协议复选框
 @mixin agreement-checkbox {
   display: flex;
