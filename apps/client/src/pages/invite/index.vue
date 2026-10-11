@@ -1,5 +1,6 @@
 <template>
   <div :class="styles.page">
+    <language-switcher />
     <error-empty :error="teamInfoError" :disabled="isTeamInfoLoading" @btn-click="refetchTeamInfo">
       <loading-container :loading="isTeamInfoLoading" :text="$t('refresh.loading')">
         <team-card v-if="teamInfo" :class="styles.card" :team="teamInfo">
@@ -43,6 +44,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import LanguageSwitcher from "@/components/language-switcher/index.vue";
 import { useClientUserData, useOverrideTitle } from "@/composables";
 import { CLIENT_QUERY_KEY, TEAM_INVITE_CARD_TITLE_KEY } from "@/constants";
 import { walkClientService } from "@/utils";
