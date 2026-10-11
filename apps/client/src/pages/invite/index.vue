@@ -5,16 +5,18 @@
       <loading-container :loading="isTeamInfoLoading" :text="$t('refresh.loading')">
         <team-card v-if="teamInfo" :class="styles.card" :team="teamInfo">
           <div :class="styles.actionArea">
-            <van-button
-              v-if="canSubmitJoin"
-              block
-              type="primary"
-              :disabled="isJoinDisabled"
-              :loading="isJoinPending"
-              @click="mutateJoinTeam"
-            >
-              {{ $t("确认加入") }}
-            </van-button>
+            <template v-if="canSubmitJoin">
+              <p v-if="joinBlockHint" :class="styles.hint">{{ joinBlockHint }}</p>
+              <van-button
+                block
+                type="primary"
+                :disabled="isJoinDisabled"
+                :loading="isJoinPending"
+                @click="mutateJoinTeam"
+              >
+                {{ $t("确认加入") }}
+              </van-button>
+            </template>
 
             <template v-else-if="isLoggedIn">
               <p :class="styles.hint">{{ joinedTeamHint }}</p>
@@ -111,9 +113,13 @@ const canSubmitJoin = computed(() => {
   return isLoggedIn.value && role !== "member" && role !== "captain";
 });
 
-const isJoinDisabled = computed(
-  () => clientUserInfo.value?.role !== "unbind" || teamInfo.value?.is_full === true
-);
+const joinBlockHint = computed(() => {
+  if (clientUserInfo.value?.join_op === 0) return t("加入团队次数已用完");
+  if (teamInfo.value?.is_full === true) return t("团队人数已满");
+  return "";
+});
+
+const isJoinDisabled = computed(() => joinBlockHint.value !== "");
 
 const joinedTeamHint = computed(() =>
   clientUserInfo.value?.team_id === teamId.value
