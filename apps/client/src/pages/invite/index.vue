@@ -1,22 +1,32 @@
 <template>
   <div :class="styles.page">
+    <language-switcher />
     <error-empty :error="teamInfoError" :disabled="isTeamInfoLoading" @btn-click="refetchTeamInfo">
       <loading-container :loading="isTeamInfoLoading" :text="$t('refresh.loading')">
         <team-card v-if="teamInfo" :class="styles.card" :team="teamInfo">
           <div :class="styles.actionArea">
-            <van-button
-              v-if="isLoggedIn"
-              block
-              type="primary"
-              :disabled="isJoinDisabled"
-              :loading="isJoinPending"
-              @click="mutateJoinTeam"
-            >
-              {{ $t("确认加入") }}
-            </van-button>
+            <template v-if="canSubmitJoin">
+              <p v-if="joinBlockHint" :class="styles.hint">{{ joinBlockHint }}</p>
+              <van-button
+                block
+                type="primary"
+                :disabled="isJoinDisabled"
+                :loading="isJoinPending"
+                @click="mutateJoinTeam"
+              >
+                {{ $t("确认加入") }}
+              </van-button>
+            </template>
+
+            <template v-else-if="isLoggedIn">
+              <p :class="styles.hint">{{ joinedTeamHint }}</p>
+              <van-button block type="primary" @click="goToTeamInfo">
+                {{ $t("查看我的团队") }}
+              </van-button>
+            </template>
 
             <template v-else>
-              <p :class="styles.loginHint">{{ $t("登录后即可加入队伍") }}</p>
+              <p :class="styles.hint">{{ $t("登录后即可加入队伍") }}</p>
               <div :class="styles.authActions">
                 <van-button block round type="primary" @click="handleLoginClick">
                   {{ $t("登录") }}
@@ -43,6 +53,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import LanguageSwitcher from "@/components/language-switcher/index.vue";
 import { useClientUserData, useOverrideTitle } from "@/composables";
 import { CLIENT_QUERY_KEY, TEAM_INVITE_CARD_TITLE_KEY } from "@/constants";
 import { walkClientService } from "@/utils";
@@ -97,8 +108,23 @@ useOverrideTitle(
   )
 );
 
-const isJoinDisabled = computed(
-  () => clientUserInfo.value?.role !== "unbind" || teamInfo.value?.is_full === true
+const canSubmitJoin = computed(() => {
+  const role = clientUserInfo.value?.role;
+  return isLoggedIn.value && role !== "member" && role !== "captain";
+});
+
+const joinBlockHint = computed(() => {
+  if (clientUserInfo.value?.join_op === 0) return t("加入团队次数已用完");
+  if (teamInfo.value?.is_full === true) return t("团队人数已满");
+  return "";
+});
+
+const isJoinDisabled = computed(() => joinBlockHint.value !== "");
+
+const joinedTeamHint = computed(() =>
+  clientUserInfo.value?.team_id === teamId.value
+    ? t("你已在该队伍中")
+    : t("你已加入其他队伍，需先退出才能加入新队伍")
 );
 
 const { mutate: mutateJoinTeam, isPending: isJoinPending } = useMutation({
@@ -121,7 +147,7 @@ const { mutate: mutateJoinTeam, isPending: isJoinPending } = useMutation({
 
     updateUserInfo(userInfo);
 
-    router.replace({ name: "team-info" });
+    goToTeamInfo();
   },
   onError: (error) => {
     if (error instanceof RequestError && error.code === RESP_CODE.NO_JOIN_CHANCE) {
@@ -143,5 +169,9 @@ const handleLoginClick = () => {
 
 const handleRegisterClick = () => {
   router.push({ name: "register", query: redirectQuery.value });
+};
+
+const goToTeamInfo = () => {
+  router.replace({ name: "team-info" });
 };
 </script>
