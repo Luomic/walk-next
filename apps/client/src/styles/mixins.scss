@@ -103,29 +103,38 @@
   }
 }
 
-/// 白底棕边阴影按钮
+/// 按钮样式
 @mixin custom-button {
-  --van-button-default-color: #734a23;
-  --van-button-default-background: #fff;
-  --van-button-default-border-color: #be8f58;
-  --van-button-primary-color: #734a23;
-  --van-button-primary-background: #fff;
+  --van-button-primary-background: #734a23;
   --van-button-primary-border-color: #be8f58;
   --van-button-border-width: 1.5px;
   --van-button-radius: 12px;
 
-  min-width: 150px;
   height: 44px;
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(190, 143, 88, 0.25);
   transition: all 0.2s ease;
 
+  &:not(.van-button--block) {
+    min-width: 150px;
+  }
+
+  &.van-button--block {
+    width: calc(100% - 32px);
+    margin-inline: auto;
+  }
+
   &:active {
-    background: #fcf8f3;
-    box-shadow: 0 2px 6px rgba(190, 143, 88, 0.2);
     transform: translateY(1px);
+  }
+
+  &.van-button--primary {
+    box-shadow: 0 4px 12px rgba(190, 143, 88, 0.25);
+
+    &:active {
+      box-shadow: 0 2px 6px rgba(190, 143, 88, 0.2);
+    }
   }
 }
 

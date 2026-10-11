@@ -52,11 +52,9 @@
       />
     </van-cell-group>
 
-    <div :class="styles.submitArea">
-      <van-button block round type="primary" native-type="submit" :loading="props.loading">
-        {{ t("提交") }}
-      </van-button>
-    </div>
+    <van-button block round plain type="primary" native-type="submit" :loading="props.loading">
+      {{ t("提交") }}
+    </van-button>
   </van-form>
 </template>
 

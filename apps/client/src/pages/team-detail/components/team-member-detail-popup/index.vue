@@ -43,7 +43,7 @@
           :loading="props.actionLoading"
           @click="handleRemoveClick"
         >
-          {{ t("删除队员") }}
+          {{ t("移出团队") }}
         </van-button>
 
         <van-button

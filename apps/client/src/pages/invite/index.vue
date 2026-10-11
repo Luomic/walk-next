@@ -28,7 +28,7 @@
             <template v-else>
               <p :class="styles.hint">{{ $t("登录后即可加入队伍") }}</p>
               <div :class="styles.authActions">
-                <van-button block round type="primary" @click="handleLoginClick">
+                <van-button block round plain type="primary" @click="handleLoginClick">
                   {{ $t("登录") }}
                 </van-button>
                 <van-button block round plain type="primary" @click="handleRegisterClick">

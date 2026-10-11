@@ -33,8 +33,9 @@
 
           <van-button
             block
+            round
+            plain
             type="primary"
-            icon="edit"
             :class="styles.editButton"
             @click="handleNavigateEdit"
           >
