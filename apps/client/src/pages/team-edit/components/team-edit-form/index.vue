@@ -169,14 +169,14 @@ const selectedRouteLabel = computed(() =>
 const matchActions = computed<ActionSheetAction[]>(() =>
   MATCH_OPTIONS.map((option) => ({
     name: t(option.label),
-    color: option.value === formValue.allowMatch ? "#1989fa" : undefined
+    color: option.value === formValue.allowMatch ? "#734a23" : undefined
   }))
 );
 
 const routeActions = computed<ActionSheetAction[]>(() =>
   ROUTE_OPTIONS.map((option) => ({
     name: t(option.label),
-    color: option.value === formValue.routeName ? "#1989fa" : undefined
+    color: option.value === formValue.routeName ? "#734a23" : undefined
   }))
 );
 // #endregion

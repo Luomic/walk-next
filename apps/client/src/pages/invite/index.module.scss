@@ -17,10 +17,6 @@
     color: #1f2937;
   }
 
-  :global(.van-button:not(.van-button--round)) {
-    border-radius: 8px;
-  }
-
   :global(
     .van-button--primary:not(.van-button--plain):not(.van-button--small)
   ) {

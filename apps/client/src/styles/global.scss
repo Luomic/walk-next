@@ -38,14 +38,21 @@ html {
     @include card-container;
   }
 
-  :is(
-      .van-button--default,
-      .van-button--primary,
-      .van-button--danger,
-      .van-button--warning,
-      .van-button--success
-    ):not(.van-button--small):not(.van-action-bar-button) {
+  .van-button:not(
+    .van-button--small,
+    .van-action-bar-button,
+    .van-dialog__confirm,
+    .van-dialog__cancel
+  ) {
     @include custom-button;
+  }
+
+  .van-back-top {
+    --van-back-top-background: #734a23;
+  }
+
+  .van-tag--primary {
+    --van-tag-primary-color: #734a23;
   }
 
   .van-radio {
