@@ -105,11 +105,9 @@
 
 /// 白底棕边阴影按钮
 @mixin custom-button {
-  --van-button-default-color: #734a23;
-  --van-button-default-background: #fff;
+  --van-button-default-background: #734a23;
   --van-button-default-border-color: #be8f58;
-  --van-button-primary-color: #734a23;
-  --van-button-primary-background: #fff;
+  --van-button-primary-background: #734a23;
   --van-button-primary-border-color: #be8f58;
   --van-button-border-width: 1.5px;
   --van-button-radius: 12px;

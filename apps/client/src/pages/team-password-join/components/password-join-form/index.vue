@@ -38,7 +38,7 @@
     </van-cell-group>
 
     <div :class="styles.submitArea">
-      <van-button block round type="primary" native-type="submit" :loading="props.loading">
+      <van-button block round plain type="primary" native-type="submit" :loading="props.loading">
         {{ $t("立即加入") }}
       </van-button>
     </div>

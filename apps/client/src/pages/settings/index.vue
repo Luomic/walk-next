@@ -27,7 +27,7 @@
     </van-cell-group>
 
     <div :class="styles.buttonContainer">
-      <van-button type="primary" block @click="handleLogoutClick">
+      <van-button plain type="primary" block @click="handleLogoutClick">
         {{ t("退出登录") }}
       </van-button>
     </div>

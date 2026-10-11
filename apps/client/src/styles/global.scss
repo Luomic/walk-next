@@ -38,8 +38,13 @@ html {
     @include card-container;
   }
 
-  .van-button--default:not(.van-button--plain):not(.van-button--small),
-  .van-button--primary:not(.van-button--plain):not(.van-button--small) {
+  :is(
+    .van-button--default,
+    .van-button--primary,
+    .van-button--danger,
+    .van-button--warning,
+    .van-button--success
+  ):not(.van-button--small) {
     @include custom-button;
   }
 

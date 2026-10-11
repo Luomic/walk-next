@@ -33,6 +33,7 @@
 
           <van-button
             block
+            plain
             type="primary"
             icon="edit"
             :class="styles.editButton"

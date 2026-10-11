@@ -27,6 +27,7 @@
               block
               round
               type="primary"
+              plain
               :disabled="!teamDetail"
               @click="isShareSheetShow = true"
             >
@@ -46,6 +47,7 @@
               block
               round
               type="primary"
+              plain
               :loading="isSubmitTeamPending || isUndoTeamSubmissionPending"
               :disabled="isTeamDetailLoading"
               @click="handleSubmissionClick"

@@ -29,7 +29,7 @@
     <van-cell :title="t('当前位置')" :value="t(props.team.latest_point_name) || t('未开始')" />
   </van-cell-group>
 
-  <van-button v-if="props.canEdit" block round type="primary" @click="handleEditClick">
+  <van-button v-if="props.canEdit" block round plain type="primary" @click="handleEditClick">
     {{ t("修改信息") }}
   </van-button>
 </template>

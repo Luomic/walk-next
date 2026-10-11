@@ -98,7 +98,7 @@
     <terms-agreement v-model="isAgreed" />
 
     <div :class="styles.submitArea">
-      <van-button native-type="submit" :loading="props.loading">
+      <van-button plain native-type="submit" :loading="props.loading">
         {{ t("注册") }}
       </van-button>
     </div>
