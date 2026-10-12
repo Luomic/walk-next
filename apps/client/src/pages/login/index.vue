@@ -39,7 +39,7 @@ import Decoration from "@/components/decoration/index.vue";
 import IcpRecord from "@/components/icp-record/index.vue";
 import LanguageSwitcher from "@/components/language-switcher/index.vue";
 import { useClientUserData } from "@/composables";
-import { walkClientService } from "@/utils";
+import { getErrorMessage, walkClientService } from "@/utils";
 
 import LoginForm from "./components/login-form/index.vue";
 import styles from "./index.module.scss";
@@ -88,8 +88,7 @@ const { mutate: mutateLogin, isPending: isLoginPending } = useMutation({
       if (wrongPasswordCount.value >= 3) showLoginHelp();
     }
 
-    const message = error instanceof Error ? error.message : t("登录失败，请稍后重试");
-    showFailToast({ message });
+    showFailToast({ message: getErrorMessage(error, t("登录失败，请稍后重试")) });
   }
 });
 

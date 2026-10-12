@@ -56,7 +56,7 @@ import { useRoute, useRouter } from "vue-router";
 import LanguageSwitcher from "@/components/language-switcher/index.vue";
 import { useClientUserData, useOverrideTitle } from "@/composables";
 import { CLIENT_QUERY_KEY, TEAM_INVITE_CARD_TITLE_KEY } from "@/constants";
-import { walkClientService } from "@/utils";
+import { getErrorMessage, walkClientService } from "@/utils";
 
 import TeamCard from "./components/team-card/index.vue";
 import styles from "./index.module.scss";
@@ -147,9 +147,7 @@ const { mutate: mutateJoinTeam, isPending: isJoinPending } = useMutation({
       return;
     }
 
-    showFailToast({
-      message: (error instanceof Error && error.message) || t("加入失败，请稍后重试")
-    });
+    showFailToast({ message: getErrorMessage(error, t("加入失败，请稍后重试")) });
   }
 });
 

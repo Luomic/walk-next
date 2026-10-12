@@ -13,7 +13,7 @@ import { useRouter } from "vue-router";
 import TeamForm from "@/components/team-form/index.vue";
 import type { TeamFormValue } from "@/components/team-form/types";
 import { useClientUserData } from "@/composables";
-import { walkClientService } from "@/utils";
+import { getErrorMessage, walkClientService } from "@/utils";
 
 import styles from "./index.module.scss";
 
@@ -38,9 +38,7 @@ const { mutate: mutateCreateTeam, isPending: isCreatePending } = useMutation({
     router.replace({ name: "team-info" });
   },
   onError: (error: unknown) => {
-    const message = error instanceof Error ? error.message : t("创建失败，请稍后重试");
-
-    showFailToast({ message });
+    showFailToast({ message: getErrorMessage(error, t("创建失败，请稍后重试")) });
   }
 });
 
