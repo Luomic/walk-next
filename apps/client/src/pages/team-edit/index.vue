@@ -13,10 +13,11 @@
         />
 
         <div v-else-if="teamDetail" :class="styles.content">
-          <team-edit-form
+          <team-form
             :initial-value="initialFormValue"
             :loading="isUpdateTeamInfoPending"
             :submitted="teamDetail.submitted"
+            submit-label="更新信息"
             @submit="handleFormSubmit"
           />
         </div>
@@ -33,12 +34,12 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import TeamForm from "@/components/team-form/index.vue";
+import type { TeamFormValue } from "@/components/team-form/types";
 import { CLIENT_QUERY_KEY } from "@/constants";
 import { walkClientService } from "@/utils";
 
-import TeamEditForm from "./components/team-edit-form/index.vue";
 import styles from "./index.module.scss";
-import type { TeamEditFormValue } from "./types";
 import { buildInitialFormValue } from "./utils";
 
 const router = useRouter();
@@ -58,7 +59,7 @@ const {
 const initialFormValue = computed(() => buildInitialFormValue(teamDetail.value));
 
 const { mutate: mutateUpdateTeamInfo, isPending: isUpdateTeamInfoPending } = useMutation({
-  mutationFn: (value: TeamEditFormValue) =>
+  mutationFn: (value: TeamFormValue) =>
     walkClientService.UpdateTeamInfo({
       name: value.name,
       slogan: value.slogan,
@@ -85,7 +86,7 @@ const { mutate: mutateUpdateTeamInfo, isPending: isUpdateTeamInfoPending } = use
   }
 });
 
-function handleFormSubmit(value: TeamEditFormValue) {
+function handleFormSubmit(value: TeamFormValue) {
   if (isUpdateTeamInfoPending.value) return;
   mutateUpdateTeamInfo(value);
 }

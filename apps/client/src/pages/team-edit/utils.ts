@@ -1,6 +1,6 @@
 import type { QueryTeamDetailResponse } from "api/types/client";
 
-import type { RouteName, TeamEditFormRawValue } from "./types";
+import type { RouteName, TeamFormRawValue } from "@/components/team-form/types";
 
 const ROUTE_LABEL_MAP: Record<RouteName, string> = {
   "pf-half": "屏峰半程",
@@ -15,10 +15,10 @@ export const getRouteLabel = (routeName: string) => {
   return ROUTE_LABEL_MAP[routeName];
 };
 
-export function buildInitialFormValue(team?: QueryTeamDetailResponse): TeamEditFormRawValue {
+export function buildInitialFormValue(team?: QueryTeamDetailResponse): TeamFormRawValue {
   const routeName = team?.route_name ?? "";
 
-  let allowMatch: TeamEditFormRawValue["allowMatch"] = "";
+  let allowMatch: TeamFormRawValue["allowMatch"] = "";
   if (team) {
     allowMatch = team.allow_match ? "true" : "false";
   }

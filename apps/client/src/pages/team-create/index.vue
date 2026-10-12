@@ -1,6 +1,6 @@
 <template>
   <div :class="styles.page">
-    <create-team-form :loading="isCreatePending" @submit="handleCreateSubmit" />
+    <team-form :loading="isCreatePending" submit-label="创建团队" @submit="handleCreateSubmit" />
   </div>
 </template>
 
@@ -10,13 +10,13 @@ import { showFailToast, showSuccessToast } from "vant";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import TeamForm from "@/components/team-form/index.vue";
+import type { TeamFormValue } from "@/components/team-form/types";
 import { useClientUserData } from "@/composables";
 import { CLIENT_QUERY_KEY } from "@/constants";
 import { walkClientService } from "@/utils";
 
-import CreateTeamForm from "./components/create-team-form/index.vue";
 import styles from "./index.module.scss";
-import type { CreateTeamFormValue } from "./types";
 
 const router = useRouter();
 const { t } = useI18n();
@@ -24,7 +24,7 @@ const queryClient = useQueryClient();
 const { updateUserInfo } = useClientUserData();
 
 const { mutate: mutateCreateTeam, isPending: isCreatePending } = useMutation({
-  mutationFn: (value: CreateTeamFormValue) =>
+  mutationFn: (value: TeamFormValue) =>
     walkClientService.CreateTeam({
       name: value.name,
       slogan: value.slogan,
@@ -53,7 +53,7 @@ const { mutate: mutateCreateTeam, isPending: isCreatePending } = useMutation({
   }
 });
 
-const handleCreateSubmit = (value: CreateTeamFormValue) => {
+const handleCreateSubmit = (value: TeamFormValue) => {
   if (isCreatePending.value) return;
   mutateCreateTeam(value);
 };
