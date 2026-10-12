@@ -4,7 +4,8 @@
 }
 
 .card {
-  margin: 22px 12px 0;
+  max-width: min(100% - 24px, max(50vw, 15vw + 297px));
+  margin: 22px auto;
 }
 
 .actionArea {
