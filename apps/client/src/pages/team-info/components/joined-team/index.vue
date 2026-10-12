@@ -111,6 +111,9 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
 import QrCode from "@/components/qr-code/index.vue";
+import TeamMemberDetailPopup from "@/components/team/team-member-detail-popup/index.vue";
+import TeamMemberList from "@/components/team/team-member-list/index.vue";
+import TeamOverviewCard from "@/components/team/team-overview-card/index.vue";
 import { useClientUserData } from "@/composables";
 import {
   CLIENT_QUERY_KEY,
@@ -119,9 +122,6 @@ import {
   TEAM_INVITE_LINK_CARD_SUMMARY,
   TEAM_INVITE_MESSAGE_KEYS
 } from "@/constants";
-import TeamMemberDetailPopup from "@/pages/team-detail/components/team-member-detail-popup/index.vue";
-import TeamMemberList from "@/pages/team-detail/components/team-member-list/index.vue";
-import TeamOverviewCard from "@/pages/team-detail/components/team-overview-card/index.vue";
 import TeamPassCode from "@/pages/team-info/components/team-pass-code/index.vue";
 import { walkClientService } from "@/utils";
 

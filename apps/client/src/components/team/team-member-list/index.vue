@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import type { UserSummary } from "api/types/client";
 
-import { getMemberRoleLabel, getMemberTypeLabel } from "../../utils";
+import { getMemberRoleLabel, getMemberTypeLabel } from "../utils";
 import styles from "./index.module.scss";
 
 const props = defineProps<{

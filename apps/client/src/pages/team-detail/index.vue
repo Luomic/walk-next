@@ -33,13 +33,13 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import { getMemberTypeLabel } from "@/components/team/utils";
 import { useClientUserData } from "@/composables";
 import { CLIENT_QUERY_KEY } from "@/constants";
 import { walkClientService } from "@/utils";
 
 import TeamBasicDetail from "./components/team-basic-detail/index.vue";
 import styles from "./index.module.scss";
-import { getMemberTypeLabel } from "./utils";
 
 const router = useRouter();
 const { t } = useI18n();

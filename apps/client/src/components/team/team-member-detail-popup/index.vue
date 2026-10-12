@@ -67,7 +67,7 @@ import { ErrorEmpty, LoadingContainer } from "shared";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import { getMemberRoleLabel, getMemberTypeLabel, getWalkStatusLabel } from "../../utils";
+import { getMemberRoleLabel, getMemberTypeLabel, getWalkStatusLabel } from "../utils";
 import styles from "./index.module.scss";
 
 const props = defineProps<{
