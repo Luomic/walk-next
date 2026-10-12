@@ -61,7 +61,7 @@
             :class="styles.eyeButton"
             type="button"
             :aria-label="t('切换密码显示')"
-            @click.stop="handlePasswordVisibleClick"
+            @click.stop="togglePasswordVisible"
           >
             <van-icon :name="isPasswordVisible ? 'eye-o' : 'closed-eye'" />
           </button>
@@ -87,7 +87,7 @@
             :class="styles.eyeButton"
             type="button"
             :aria-label="t('切换密码显示')"
-            @click.stop="handlePasswordVisibleClick"
+            @click.stop="togglePasswordVisible"
           >
             <van-icon :name="isPasswordVisible ? 'eye-o' : 'closed-eye'" />
           </button>
@@ -106,13 +106,14 @@
 </template>
 
 <script setup lang="ts">
+import { useToggle } from "@vueuse/core";
 import { createRequiredRuleWithMessage } from "shared";
 import type { FieldRule, FormInstance } from "vant";
-import { showToast } from "vant";
 import { computed, reactive, ref, useTemplateRef } from "vue";
 import { useI18n } from "vue-i18n";
 
 import TermsAgreement from "@/components/terms-agreement/index.vue";
+import { useTermsAgreementGate } from "@/composables";
 import { getTelRules } from "@/constants/validation";
 
 import type { AlumniRegisterFormValue } from "../../types";
@@ -138,8 +139,8 @@ const formValue = reactive<AlumniRegisterFormValue>({
   password: ""
 });
 
-const isPasswordVisible = ref(false);
-const isAgreed = ref(false);
+const [isPasswordVisible, togglePasswordVisible] = useToggle();
+const { isAgreed, checkAgreed } = useTermsAgreementGate();
 const confirmPassword = ref("");
 
 const confirmPasswordRules = computed<FieldRule[]>(() => [
@@ -152,10 +153,6 @@ const confirmPasswordRules = computed<FieldRule[]>(() => [
 // #endregion
 
 // #region 交互与提交
-const handlePasswordVisibleClick = () => {
-  isPasswordVisible.value = !isPasswordVisible.value;
-};
-
 const handleSubmit = async () => {
   formValue.name = formValue.name.trim();
   formValue.identity = formValue.identity.trim();
@@ -168,10 +165,7 @@ const handleSubmit = async () => {
     return;
   }
 
-  if (!isAgreed.value) {
-    showToast({ message: t("请阅读并同意《用户协议与隐私政策》") });
-    return;
-  }
+  if (!checkAgreed()) return;
 
   emit("submit", {
     name: formValue.name,

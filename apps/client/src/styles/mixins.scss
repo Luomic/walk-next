@@ -181,6 +181,13 @@
   --van-checkbox-label-color: #666;
 }
 
+/// 提交按钮区域居中
+@mixin submit-area {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
 /// 装饰图片通用样式
 /// fixed 定位锚定视口（与背景图一致），不随页面滚动
 @mixin illustration-image(
