@@ -123,7 +123,7 @@ import {
   TEAM_INVITE_MESSAGE_KEYS
 } from "@/constants";
 import TeamPassCode from "@/pages/team-info/components/team-pass-code/index.vue";
-import { walkClientService } from "@/utils";
+import { pickRandom, walkClientService } from "@/utils";
 
 import styles from "./index.module.scss";
 
@@ -334,9 +334,6 @@ const handleTransferCaptainClick = (memberId: number) => {
 // MARK: 分享
 const isShareSheetShow = ref(false);
 const isQrPopupShow = ref(false);
-
-const pickRandom = <T,>(l: readonly [T, ...T[]]): T =>
-  l[Math.floor(Math.random() * l.length)] ?? l[0];
 
 const shareData = computed(() => {
   let url = "";
