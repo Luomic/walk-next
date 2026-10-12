@@ -103,7 +103,7 @@
 
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { useClipboard, useEventListener, useShare, useTimeoutFn } from "@vueuse/core";
+import { useClipboard, useEventListener, useShare } from "@vueuse/core";
 import { ErrorEmpty, LoadingContainer, RequestError, RESP_CODE } from "shared";
 import { type ShareSheetOption, showConfirmDialog, showFailToast, showSuccessToast } from "vant";
 import { computed, ref } from "vue";
@@ -365,6 +365,7 @@ const handleTransferCaptainClick = (memberId: number) => {
 // MARK: 分享
 const isShareSheetShow = ref(false);
 const isQrPopupShow = ref(false);
+const qqShareTimer = ref<ReturnType<typeof setTimeout> | null>(null);
 
 const pickRandom = <T,>(l: readonly [T, ...T[]]): T =>
   l[Math.floor(Math.random() * l.length)] ?? l[0];
@@ -402,6 +403,13 @@ const share = useShare(
   }))
 );
 
+useEventListener(document, "visibilitychange", () => {
+  if (document.hidden && qqShareTimer.value) {
+    clearTimeout(qqShareTimer.value);
+    qqShareTimer.value = null;
+  }
+});
+
 const shareOptions = computed<ShareSheetOption[][]>(() => [
   [
     { name: t("QQ"), icon: "qq" },
@@ -429,7 +437,7 @@ const handleShareOperation = async (option: ShareSheetOption) => {
             `&url=${encodeURIComponent(shareData.value.url)}` +
             `&image_url=${encodeURIComponent(shareData.value.image)}`;
 
-          const { stop } = useTimeoutFn(() => {
+          qqShareTimer.value = setTimeout(() => {
             const fallbackUrl = new URL("https://connect.qq.com/widget/shareqq/");
             fallbackUrl.searchParams.set("url", shareData.value.url);
             fallbackUrl.searchParams.set("title", shareData.value.title);
@@ -437,18 +445,16 @@ const handleShareOperation = async (option: ShareSheetOption) => {
             fallbackUrl.searchParams.set("pics", shareData.value.image);
             fallbackUrl.searchParams.set("desc", shareData.value.desc);
             window.open(fallbackUrl.toString());
+            qqShareTimer.value = null;
           }, 1500);
-          useEventListener(document, "visibilitychange", () => {
-            if (document.hidden) stop();
-          });
           window.location.href = mqqUrl;
         }
         break;
       case "star-o":
         {
-          // QQ空间: http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=链接&title=标题&desc=描述&summary=摘要&site=来源&pics=图片
+          // QQ空间: https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=链接&title=标题&desc=描述&summary=摘要&site=来源&pics=图片
           const qzoneShareUrl = new URL(
-            "http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey"
+            "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey"
           );
           qzoneShareUrl.searchParams.set("url", shareData.value.url);
           qzoneShareUrl.searchParams.set("title", shareData.value.title);
