@@ -5,7 +5,7 @@
 密码: Password
 学工号: Student/Staff ID
 姓名: Name
-微信: Weixin
+微信: WeChat
 QQ: QQ
 选填: Optional
 用户协议与隐私政策: Terms of Service and Privacy Policy
@@ -29,7 +29,7 @@ QQ: QQ
 复制链接: Copy Link
 系统分享: System Share
 分享失败，请稍后重试: Sharing failed, please try again later
-解散队伍: Disband team
+解散队伍: Disband Team
 提交: Submit
 提交队伍: Submit Team
 取消: Cancel
@@ -49,7 +49,7 @@ signup:
 状态: Status
 未开始: Not started
 队员信息: Team member information
-修改信息: Edit Information
+修改信息: Edit Info
 当前位置: Your location
 mgsxq: Dexinfu Square
 hbgy: Slider Park
@@ -75,11 +75,11 @@ refresh:
 调整队伍: Adjust Team
 毅行筹备: Trailwalk Preparation
 正式毅行: Trailwalk
-注册组队说明: Registration is open. You can enter your information and build a team, but submission is not available yet
-抢票提交说明: Quotas are released at 12:00 noon each day. A successfully submitted team gets a quota
-调整队伍说明: During the adjustment period, teams may add or remove members within the permitted team size, edit personal information, and transfer team leadership. They may not, however, submit a new team or dissolve the team. After the adjustment period, no further changes to personal or team information are permitted
+注册组队说明: Registration is open. You can enter your information and build a team, but submission is not available yet.
+抢票提交说明: Quotas are released at 12:00 noon each day. A successfully submitted team gets a quota.
+调整队伍说明: During the adjustment period, teams may add or remove members within the permitted team size, edit personal information, and transfer team leadership. They may not, however, submit a new team or dissolve the team. After the adjustment period, no further changes to personal or team information are permitted.
 该路线名额已满: The quota for this route is full.
-毅行筹备说明: Quotas and team members are confirmed and can no longer be changed. Member information will be exported for insurance and other preparations
+毅行筹备说明: Quotas and team members are confirmed and can no longer be changed. Member information will be exported for insurance and other preparations.
 正式毅行说明: Have a successful trailwalk!
 暂未开放: Not available
 当前不在毅行活动时期内: The trailwalk is not in an active phase.
@@ -87,10 +87,10 @@ refresh:
 团队通行码: Team passcode
 未提交: Unsubmitted
 settings: Settings
-请输入微信: Please enter your Wexin ID
+请输入微信: Please enter your WeChat ID
 请输入QQ: Please enter your QQ number
 更新失败: Update failed
-剩余组队次数: Remaining team actions
+剩余组队次数: Remaining Attempts
 剩余创建团队次数: Remaining team creation attempts
 剩余加入团队次数: Remaining team join attempts
 剩余次数说明: About remaining attempts
@@ -105,7 +105,7 @@ settings: Settings
 教职工注册: Faculty & Staff Sign Up
 校友注册: Alumni Sign Up
 密码加入: Join with Password
-随机加入: Random Join
+随机加入: Join Randomly
 创建团队: Create Team
 团队详情: Team Details
 再想想: Reconsider
@@ -114,7 +114,7 @@ pfxq: Zhejiang University of Technology
 提交队伍后即可查看二维码: The QR code will be available after the team is submitted
 通知: Notice
 我知道了: Got it
-通知确认失败，请稍后重试: Failed to acknowledge the notice. Please try again later
+通知确认失败，请稍后重试: Notice confirmation failed, please try again later
 请输入手机号或学工号: Please enter your phone number or student/staff ID
 戳这解答: Click here for help
 屏峰全程: Pingfeng Full Course
@@ -122,15 +122,15 @@ pfxq: Zhejiang University of Technology
 莫干山全程: Moganshan Full Course
 反馈: Feedback
 团队邀请: Team Invitation
-确认加入: Confirm joining
+确认加入: Confirm Join
 邀请链接无效: Invitation link is invalid
 邀请已失效: Invitation expired
-登录后即可加入队伍: Sign in to join team
+登录后即可加入队伍: Sign in to join a team
 查看我的团队: View My Team
-你已在该队伍中: You are already in this team
+你已在该队伍中: You are already in this team.
 你已加入其他队伍，需先退出才能加入新队伍: You have joined another team. Leave it before joining a new one.
 队长{name}邀请您加入: Captain {name} invites you to join
-团队人数: Number of team members
+团队人数: Team Size
 已满: Full
 未满: Not full
 当前阶段: Current stage
@@ -142,8 +142,8 @@ pfxq: Zhejiang University of Technology
 QQ 空间: QQ Zone
 微博: Weibo
 刷新: Refresh
-取消提交: Cancel submission
-退出队伍: Leave team
+取消提交: Cancel Submission
+退出队伍: Leave Team
 暂无团队信息: No team information
 未选择队员: No member selected
 提交失败，请稍后重试: Submission failed, please try again later
@@ -152,10 +152,10 @@ QQ 空间: QQ Zone
 当天名额已满: Daily quota is full
 移出失败，请稍后重试: Remove failed, please try again later
 移出成功: Removed successfully
-移出团队: Remove member
+移出团队: Remove Member
 移交失败，请稍后重试: Transfer failed, please try again later
 移交成功: Transferred successfully
-移交队长: Transfer captaincy
+移交队长: Transfer Captaincy
 确认将该队员移出团队吗？: Remove this member from the team?
 确认将队长移交给该队员吗？移交后你将变为队员。: Transfer captaincy to this member? You will become a regular member.
 确认解散当前队伍吗？解散后所有队员都需要重新加入队伍。: Disband this team? All members will need to rejoin a team.
@@ -235,7 +235,7 @@ QQ 空间: QQ Zone
 登录失败，请稍后重试: Sign in failed, please try again later
 登录答疑: Login Help
 知道了: Got it
-加入成功！: Joined successfully!
+加入成功！: Joined successfully
 加入失败，请稍后重试: Join failed, please try again later
 序号: No.
 个人通行码用于团队重组、点位打卡。: The personal passcode is used for team reorganization and point check-in.
@@ -246,7 +246,7 @@ QQ 空间: QQ Zone
 已退出登录: Logged out
 报名须知与免责协议: Registration Notice and Disclaimer
 编号密码有误，请重新输入！: Wrong team ID or password, please try again!
-创建成功！: Team created!
+创建成功！: Team created
 创建失败，请稍后重试: Team creation failed, please try again later
 二维码: QR Code
 中国大陆: Mainland China
