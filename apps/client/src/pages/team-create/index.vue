@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import { useMutation } from "@tanstack/vue-query";
 import { showFailToast, showSuccessToast } from "vant";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -13,15 +13,13 @@ import { useRouter } from "vue-router";
 import TeamForm from "@/components/team-form/index.vue";
 import type { TeamFormValue } from "@/components/team-form/types";
 import { useClientUserData } from "@/composables";
-import { CLIENT_QUERY_KEY } from "@/constants";
 import { walkClientService } from "@/utils";
 
 import styles from "./index.module.scss";
 
 const router = useRouter();
 const { t } = useI18n();
-const queryClient = useQueryClient();
-const { updateUserInfo } = useClientUserData();
+const { refreshUserInfo } = useClientUserData();
 
 const { mutate: mutateCreateTeam, isPending: isCreatePending } = useMutation({
   mutationFn: (value: TeamFormValue) =>
@@ -36,14 +34,7 @@ const { mutate: mutateCreateTeam, isPending: isCreatePending } = useMutation({
     }),
   onSuccess: async () => {
     showSuccessToast({ message: t("创建成功！") });
-
-    const userInfo = await queryClient.fetchQuery({
-      queryKey: [CLIENT_QUERY_KEY.USER.SELF],
-      queryFn: () => walkClientService.QueryUserInfo()
-    });
-
-    updateUserInfo(userInfo);
-
+    await refreshUserInfo();
     router.replace({ name: "team-info" });
   },
   onError: (error: unknown) => {

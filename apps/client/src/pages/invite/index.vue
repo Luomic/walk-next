@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import { useMutation, useQuery } from "@tanstack/vue-query";
 import { ErrorEmpty, LoadingContainer, RequestError, RESP_CODE } from "shared";
 import { showFailToast, showSuccessToast } from "vant";
 import { computed } from "vue";
@@ -64,8 +64,7 @@ import styles from "./index.module.scss";
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
-const queryClient = useQueryClient();
-const { isLoggedIn, clientUserInfo, updateUserInfo } = useClientUserData();
+const { isLoggedIn, clientUserInfo, refreshUserInfo } = useClientUserData();
 
 const teamId = computed(() => {
   const raw = route.query.team_id;
@@ -139,14 +138,7 @@ const { mutate: mutateJoinTeam, isPending: isJoinPending } = useMutation({
   },
   onSuccess: async () => {
     showSuccessToast({ message: t("加入成功！") });
-
-    const userInfo = await queryClient.fetchQuery({
-      queryKey: [CLIENT_QUERY_KEY.USER.SELF],
-      queryFn: () => walkClientService.QueryUserInfo()
-    });
-
-    updateUserInfo(userInfo);
-
+    await refreshUserInfo();
     goToTeamInfo();
   },
   onError: (error) => {

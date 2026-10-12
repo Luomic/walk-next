@@ -39,7 +39,6 @@ import Decoration from "@/components/decoration/index.vue";
 import IcpRecord from "@/components/icp-record/index.vue";
 import LanguageSwitcher from "@/components/language-switcher/index.vue";
 import { useClientUserData } from "@/composables";
-import { CLIENT_QUERY_KEY } from "@/constants";
 import { walkClientService } from "@/utils";
 
 import LoginForm from "./components/login-form/index.vue";
@@ -50,7 +49,7 @@ const router = useRouter();
 const route = useRoute();
 const queryClient = useQueryClient();
 const { t } = useI18n();
-const { updateClientLoginData, updateUserInfo } = useClientUserData(queryClient);
+const { updateClientLoginData, refreshUserInfo } = useClientUserData(queryClient);
 const wrongPasswordCount = ref(0);
 
 const showLoginHelp = () => {
@@ -76,13 +75,7 @@ const { mutate: mutateLogin, isPending: isLoginPending } = useMutation({
     showSuccessToast({ message: t("登录成功") });
 
     updateClientLoginData(data.jwt);
-
-    const userInfo = await queryClient.fetchQuery({
-      queryKey: [CLIENT_QUERY_KEY.USER.SELF],
-      queryFn: () => walkClientService.QueryUserInfo()
-    });
-
-    updateUserInfo(userInfo);
+    await refreshUserInfo();
 
     const fromPath = route.query.fromPath;
     if (typeof fromPath === "string" && fromPath)

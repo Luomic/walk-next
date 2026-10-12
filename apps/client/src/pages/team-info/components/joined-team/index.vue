@@ -133,7 +133,7 @@ const TEAM_SUBMIT_MIN_SIZE = 4;
 const router = useRouter();
 const { t } = useI18n();
 const queryClient = useQueryClient();
-const { clientUserInfo, updateUserInfo } = useClientUserData();
+const { clientUserInfo, refreshUserInfo } = useClientUserData();
 
 const selectedMemberId = ref<number>();
 const isMemberDetailPopupOpened = ref(false);
@@ -205,15 +205,6 @@ const refreshTeamData = async () => {
     queryClient.invalidateQueries({ queryKey: [CLIENT_QUERY_KEY.TEAM.DETAIL] }),
     queryClient.invalidateQueries({ queryKey: [CLIENT_QUERY_KEY.TEAM.MEMBER] })
   ]);
-};
-
-const refreshClientUserData = async () => {
-  const userInfo = await queryClient.fetchQuery({
-    queryKey: [CLIENT_QUERY_KEY.USER.SELF],
-    queryFn: () => walkClientService.QueryUserInfo()
-  });
-
-  updateUserInfo(userInfo);
 };
 
 const getSubmitErrorMessage = (error: Error) => {
@@ -335,7 +326,7 @@ const handleTransferCaptainClick = (memberId: number) => {
     onSuccess: async () => {
       handleMemberPopupClose();
       showSuccessToast({ message: t("移交成功") });
-      await Promise.all([refreshTeamData(), refreshClientUserData()]);
+      await Promise.all([refreshTeamData(), refreshUserInfo()]);
     }
   });
 };
@@ -484,7 +475,7 @@ const handleDisbandClick = () => {
     action: () => mutateDisbandTeam(),
     onSuccess: async () => {
       showSuccessToast({ message: t("解散成功") });
-      await refreshClientUserData();
+      await refreshUserInfo();
       await router.replace({ name: "team-info" });
     }
   });
@@ -498,7 +489,7 @@ const handleLeaveTeamClick = () => {
     action: () => mutateLeaveTeam(),
     onSuccess: async () => {
       showSuccessToast({ message: t("退出成功") });
-      await refreshClientUserData();
+      await refreshUserInfo();
       await router.replace({ name: "team-info" });
     }
   });
