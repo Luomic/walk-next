@@ -5,7 +5,7 @@
 密码: Password
 学工号: Student/Staff ID
 姓名: Name
-微信: WeChat
+微信: Weixin
 QQ: QQ
 选填: Optional
 用户协议与隐私政策: Terms of Service and Privacy Policy
@@ -87,7 +87,7 @@ refresh:
 团队通行码: Team passcode
 未提交: Unsubmitted
 settings: Settings
-请输入微信: Please enter your WeChat ID
+请输入微信: Please enter your Weixin ID
 请输入QQ: Please enter your QQ number
 更新失败: Update failed
 剩余组队次数: Remaining Attempts
@@ -139,7 +139,7 @@ pfxq: Zhejiang University of Technology
 加入团队次数已用完: No team join attempts left
 团队人数已满: Team is full
 分享团队: Share Team
-QQ 空间: QQ Zone
+QQ 空间: Qzone
 微博: Weibo
 刷新: Refresh
 取消提交: Cancel Submission
@@ -255,6 +255,6 @@ QQ 空间: QQ Zone
 境外: Overseas
 "已复制\n快去分享给你的伙伴吧！": "Copied\nShare it with your teammates!"
 暂无可加入队伍: No teams available to join
-team.invite.card-title: Trailwalk Together! The "{name}" team awaits you | Jinghong Trailwalk
-team.invite.message-1: [Jinghong Trailwalk] The "{name}" team is one short of you! Complete the trailwalk together — tap the link to join us 👇
-team.invite.message-2: [Jinghong Trailwalk] The "{name}" team welcomes you! Walk the full route together, waiting for you to join 💪
+team.invite.card-title: 'Trailwalk Together! The "{name}" team awaits you | Jinghong Trailwalk'
+team.invite.message-1: '[Jinghong Trailwalk] The "{name}" team is one short of you! Complete the trailwalk together — tap the link to join us 👇'
+team.invite.message-2: '[Jinghong Trailwalk] The "{name}" team welcomes you! Walk the full route together, waiting for you to join 💪'
