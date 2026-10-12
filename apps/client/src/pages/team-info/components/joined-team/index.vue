@@ -1,78 +1,73 @@
 <template>
   <div :class="styles.page">
-    <error-empty
+    <query-state-container
       :error="overviewError"
-      :disabled="isOverviewLoading"
+      :loading="isOverviewLoading"
+      :data="teamOverview"
       :btn-text="t('刷新')"
-      @btn-click="reload"
+      :loading-text="t('refresh.loading')"
+      :empty-description="t('暂无团队信息')"
+      @retry="reload"
     >
-      <loading-container
-        :class="styles.loadingContainer"
-        :loading="isOverviewLoading"
-        :text="t('refresh.loading')"
-      >
-        <template v-if="teamOverview && !isOverviewLoading">
-          <team-pass-code
-            v-if="teamDetail"
-            :team-id="teamDetail.id"
-            :submitted="teamDetail.submitted"
-          />
+      <template v-if="teamOverview">
+        <team-pass-code
+          v-if="teamDetail"
+          :team-id="teamDetail.id"
+          :submitted="teamDetail.submitted"
+        />
 
-          <team-overview-card :team="teamOverview.team" @detail="handleDetailClick" />
+        <team-overview-card :team="teamOverview.team" @detail="handleDetailClick" />
 
-          <team-member-list :members="sortedMembers" @member-click="handleMemberClick" />
+        <team-member-list :members="sortedMembers" @member-click="handleMemberClick" />
 
-          <section v-if="isCaptain" :class="styles.actionArea">
-            <van-button
-              block
-              round
-              type="primary"
-              plain
-              :disabled="!teamDetail"
-              @click="isShareSheetShow = true"
-            >
-              {{ t("分享队伍") }}
-            </van-button>
-            <van-button
-              block
-              round
-              type="danger"
-              plain
-              :loading="isDisbandTeamPending"
-              @click="handleDisbandClick"
-            >
-              {{ t("解散队伍") }}
-            </van-button>
-            <van-button
-              block
-              round
-              type="primary"
-              plain
-              :loading="isSubmitTeamPending || isUndoTeamSubmissionPending"
-              :disabled="isTeamDetailLoading"
-              @click="handleSubmissionClick"
-            >
-              {{ teamDetail?.submitted ? t("取消提交") : t("提交队伍") }}
-            </van-button>
-          </section>
+        <section v-if="isCaptain" :class="styles.actionArea">
+          <van-button
+            block
+            round
+            type="primary"
+            plain
+            :disabled="!teamDetail"
+            @click="isShareSheetShow = true"
+          >
+            {{ t("分享队伍") }}
+          </van-button>
+          <van-button
+            block
+            round
+            type="danger"
+            plain
+            :loading="isDisbandTeamPending"
+            @click="handleDisbandClick"
+          >
+            {{ t("解散队伍") }}
+          </van-button>
+          <van-button
+            block
+            round
+            type="primary"
+            plain
+            :loading="isSubmitTeamPending || isUndoTeamSubmissionPending"
+            :disabled="isTeamDetailLoading"
+            @click="handleSubmissionClick"
+          >
+            {{ teamDetail?.submitted ? t("取消提交") : t("提交队伍") }}
+          </van-button>
+        </section>
 
-          <section v-else-if="isLeaveTeamVisible" :class="styles.actionArea">
-            <van-button
-              block
-              round
-              type="danger"
-              plain
-              :loading="isLeaveTeamPending"
-              @click="handleLeaveTeamClick"
-            >
-              {{ t("退出队伍") }}
-            </van-button>
-          </section>
-        </template>
-
-        <van-empty v-else-if="!isOverviewLoading" :description="t('暂无团队信息')" />
-      </loading-container>
-    </error-empty>
+        <section v-else-if="isLeaveTeamVisible" :class="styles.actionArea">
+          <van-button
+            block
+            round
+            type="danger"
+            plain
+            :loading="isLeaveTeamPending"
+            @click="handleLeaveTeamClick"
+          >
+            {{ t("退出队伍") }}
+          </van-button>
+        </section>
+      </template>
+    </query-state-container>
 
     <team-member-detail-popup
       :opened="isMemberDetailPopupOpened"
@@ -104,7 +99,7 @@
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { useClipboard, useEventListener, useShare, useTimeoutFn } from "@vueuse/core";
-import { ErrorEmpty, LoadingContainer, RequestError, RESP_CODE } from "shared";
+import { QueryStateContainer, RequestError, RESP_CODE } from "shared";
 import { type ShareSheetOption, showFailToast, showSuccessToast } from "vant";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";

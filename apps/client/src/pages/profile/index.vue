@@ -1,55 +1,50 @@
 <template>
   <div :class="styles.page">
-    <error-empty
-      :error="userInfo ? undefined : error"
-      :disabled="isLoading || Boolean(userInfo)"
+    <query-state-container
+      :error="error"
+      :loading="isLoading"
+      :data="userInfo"
       :btn-text="t('重试')"
-      @btn-click="refetch"
+      :loading-text="t('refresh.loading')"
+      :empty-description="t('暂无个人信息')"
+      @retry="refetch"
     >
-      <loading-container
-        :class="styles.loadingContainer"
-        :loading="isLoading && !userInfo"
-        :text="t('refresh.loading')"
-      >
-        <van-empty v-if="!userInfo && !isLoading" :description="t('暂无个人信息')" />
+      <div v-if="userInfo" :class="styles.content">
+        <profile-header :name="userInfo.name" :tel="displayValue(userInfo.tel)" />
 
-        <div v-else-if="userInfo" :class="styles.content">
-          <profile-header :name="userInfo.name" :tel="displayValue(userInfo.tel)" />
+        <van-notice-bar
+          v-if="userInfo.role === 'unbind'"
+          mode="link"
+          left-icon="friends-o"
+          :class="styles.noticeBar"
+          :text="t('尚未加入团队')"
+          @click="handleNavigateTeam"
+        />
 
-          <van-notice-bar
-            v-if="userInfo.role === 'unbind'"
-            mode="link"
-            left-icon="friends-o"
-            :class="styles.noticeBar"
-            :text="t('尚未加入团队')"
-            @click="handleNavigateTeam"
-          />
+        <pass-code :user-id="userInfo.id" />
 
-          <pass-code :user-id="userInfo.id" />
+        <quota-summary :create-op="userInfo.create_op" :join-op="userInfo.join_op" />
 
-          <quota-summary :create-op="userInfo.create_op" :join-op="userInfo.join_op" />
+        <profile-info-list :items="profileInfoItems" />
 
-          <profile-info-list :items="profileInfoItems" />
-
-          <van-button
-            block
-            round
-            plain
-            type="primary"
-            :class="styles.editButton"
-            @click="handleNavigateEdit"
-          >
-            {{ t("修改信息") }}
-          </van-button>
-        </div>
-      </loading-container>
-    </error-empty>
+        <van-button
+          block
+          round
+          plain
+          type="primary"
+          :class="styles.editButton"
+          @click="handleNavigateEdit"
+        >
+          {{ t("修改信息") }}
+        </van-button>
+      </div>
+    </query-state-container>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useQuery } from "@tanstack/vue-query";
-import { ErrorEmpty, LoadingContainer } from "shared";
+import { QueryStateContainer } from "shared";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";

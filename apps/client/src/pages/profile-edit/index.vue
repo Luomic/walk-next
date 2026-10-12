@@ -1,33 +1,28 @@
 <template>
   <div :class="styles.page">
-    <error-empty
-      :error="userInfo ? undefined : error"
-      :disabled="isLoading || Boolean(userInfo)"
+    <query-state-container
+      :error="error"
+      :loading="isLoading"
+      :data="userInfo"
       :btn-text="t('重试')"
-      @btn-click="refetch"
+      :loading-text="t('refresh.loading')"
+      :empty-description="t('暂无个人信息')"
+      @retry="refetch"
     >
-      <loading-container
-        :class="styles.loadingContainer"
-        :loading="isLoading && !userInfo"
-        :text="t('refresh.loading')"
-      >
-        <van-empty v-if="!userInfo && !isLoading" :description="t('暂无个人信息')" />
-
-        <div v-else-if="userInfo" :class="styles.content">
-          <profile-edit-form
-            :initial-value="initialFormValue"
-            :loading="isUpdatePending"
-            @submit="handleFormSubmit"
-          />
-        </div>
-      </loading-container>
-    </error-empty>
+      <div v-if="userInfo" :class="styles.content">
+        <profile-edit-form
+          :initial-value="initialFormValue"
+          :loading="isUpdatePending"
+          @submit="handleFormSubmit"
+        />
+      </div>
+    </query-state-container>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { ErrorEmpty, LoadingContainer } from "shared";
+import { QueryStateContainer } from "shared";
 import { showFailToast, showSuccessToast } from "vant";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";

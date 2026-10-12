@@ -1,53 +1,56 @@
 <template>
   <div :class="styles.page">
     <language-switcher />
-    <error-empty :error="teamInfoError" :disabled="isTeamInfoLoading" @btn-click="refetchTeamInfo">
-      <loading-container :loading="isTeamInfoLoading" :text="$t('refresh.loading')">
-        <team-card v-if="teamInfo" :class="styles.card" :team="teamInfo">
-          <div :class="styles.actionArea">
-            <template v-if="canSubmitJoin">
-              <p v-if="joinBlockHint" :class="styles.hint">{{ joinBlockHint }}</p>
-              <van-button
-                block
-                type="primary"
-                :disabled="isJoinDisabled"
-                :loading="isJoinPending"
-                @click="mutateJoinTeam"
-              >
-                {{ $t("确认加入") }}
+    <query-state-container
+      :error="teamInfoError"
+      :loading="isTeamInfoLoading"
+      :data="teamInfo"
+      :loading-text="$t('refresh.loading')"
+      :empty-description="$t('邀请已失效')"
+      @retry="refetchTeamInfo"
+    >
+      <team-card v-if="teamInfo" :class="styles.card" :team="teamInfo">
+        <div :class="styles.actionArea">
+          <template v-if="canSubmitJoin">
+            <p v-if="joinBlockHint" :class="styles.hint">{{ joinBlockHint }}</p>
+            <van-button
+              block
+              type="primary"
+              :disabled="isJoinDisabled"
+              :loading="isJoinPending"
+              @click="mutateJoinTeam"
+            >
+              {{ $t("确认加入") }}
+            </van-button>
+          </template>
+
+          <template v-else-if="isLoggedIn">
+            <p :class="styles.hint">{{ joinedTeamHint }}</p>
+            <van-button block type="primary" @click="goToTeamInfo">
+              {{ $t("查看我的团队") }}
+            </van-button>
+          </template>
+
+          <template v-else>
+            <p :class="styles.hint">{{ $t("登录后即可加入队伍") }}</p>
+            <div :class="styles.authActions">
+              <van-button block round plain type="primary" @click="handleLoginClick">
+                {{ $t("登录") }}
               </van-button>
-            </template>
-
-            <template v-else-if="isLoggedIn">
-              <p :class="styles.hint">{{ joinedTeamHint }}</p>
-              <van-button block type="primary" @click="goToTeamInfo">
-                {{ $t("查看我的团队") }}
+              <van-button block round plain type="primary" @click="handleRegisterClick">
+                {{ $t("注册") }}
               </van-button>
-            </template>
-
-            <template v-else>
-              <p :class="styles.hint">{{ $t("登录后即可加入队伍") }}</p>
-              <div :class="styles.authActions">
-                <van-button block round plain type="primary" @click="handleLoginClick">
-                  {{ $t("登录") }}
-                </van-button>
-                <van-button block round plain type="primary" @click="handleRegisterClick">
-                  {{ $t("注册") }}
-                </van-button>
-              </div>
-            </template>
-          </div>
-        </team-card>
-
-        <van-empty v-else-if="!isTeamInfoLoading" :description="$t('邀请已失效')" />
-      </loading-container>
-    </error-empty>
+            </div>
+          </template>
+        </div>
+      </team-card>
+    </query-state-container>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useMutation, useQuery } from "@tanstack/vue-query";
-import { ErrorEmpty, LoadingContainer, RequestError, RESP_CODE } from "shared";
+import { QueryStateContainer, RequestError, RESP_CODE } from "shared";
 import { showFailToast, showSuccessToast } from "vant";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";

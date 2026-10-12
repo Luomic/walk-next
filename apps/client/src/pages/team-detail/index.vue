@@ -9,26 +9,20 @@
     />
 
     <template v-else>
-      <error-empty
+      <query-state-container
         :error="teamDetailError"
-        :disabled="isTeamDetailLoading"
-        @btn-click="handleTeamDetailRetry"
-      >
-        <loading-container
-          :class="styles.loadingContainer"
-          :loading="isTeamDetailLoading"
-          :text="t('refresh.loading')"
-        >
-          <van-empty v-if="!isTeamDetailLoading" :description="t('暂无团队详细信息')" />
-        </loading-container>
-      </error-empty>
+        :loading="isTeamDetailLoading"
+        :loading-text="t('refresh.loading')"
+        :empty-description="t('暂无团队详细信息')"
+        @retry="handleTeamDetailRetry"
+      />
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useQuery } from "@tanstack/vue-query";
-import { ErrorEmpty, LoadingContainer } from "shared";
+import { QueryStateContainer } from "shared";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
