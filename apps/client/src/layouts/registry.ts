@@ -23,6 +23,16 @@ export interface LayoutRegistry {
 
 export type LayoutName = keyof LayoutRegistry;
 
+/** 路由 meta.layout 的类型：name 决定布局，props 随布局而变 */
+export type RouteLayout =
+  | { name?: "default-layout"; props?: DefaultLayoutProps }
+  | {
+      [N in Exclude<LayoutName, "default-layout">]: {
+        name: N;
+        props?: LayoutRegistry[N]["props"];
+      };
+    }[Exclude<LayoutName, "default-layout">];
+
 const modules = import.meta.glob<AsyncComponentLoader>("./*/index.vue");
 
 const result: Record<string, AsyncComponentLoader> = {};
