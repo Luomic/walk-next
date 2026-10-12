@@ -8,7 +8,6 @@
           :label="t('团队名称')"
           name="name"
           maxlength="20"
-          show-word-limit
           :placeholder="t('请输入名称')"
           autocomplete="off"
         />
