@@ -6,7 +6,11 @@
     :btn-text="btnText"
     @btn-click="emit('retry')"
   >
-    <loading-container :loading="effectiveLoading" :text="loadingText">
+    <loading-container
+      class="query-state-container"
+      :loading="effectiveLoading"
+      :text="loadingText"
+    >
       <slot />
       <van-empty v-if="emptyDescription && !hasData && !loading" :description="emptyDescription" />
     </loading-container>
@@ -14,6 +18,8 @@
 </template>
 
 <script setup lang="ts">
+import "./index.scss";
+
 import { computed } from "vue";
 
 import ErrorEmpty from "../error-empty/index.vue";
