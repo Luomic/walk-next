@@ -1,5 +1,5 @@
 <template>
-  <loading-container :loading="submitted && isQuotaFetching" :text="t('refresh.loading')">
+  <loading-container :loading="props.submitted && isQuotaFetching" :text="t('refresh.loading')">
     <van-form ref="formRef" :disabled="props.loading" @submit="handleSubmit">
       <van-cell-group inset>
         <van-field

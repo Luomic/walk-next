@@ -7,7 +7,7 @@
     @btn-click="emit('retry')"
   >
     <loading-container
-      class="query-state-container"
+      :class="effectiveLoading && 'query-state-container'"
       :loading="effectiveLoading"
       :text="loadingText"
     >

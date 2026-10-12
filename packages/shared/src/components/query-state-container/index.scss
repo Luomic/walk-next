@@ -1,7 +1,3 @@
-// 加载态兜底高度：插槽内容为空时（首屏加载、空态）撑开容器，
-// 使绝对定位的 loading-container 遮罩可见
 .query-state-container {
-  .loading-container {
-    min-height: 240px;
-  }
+  min-height: 240px;
 }
