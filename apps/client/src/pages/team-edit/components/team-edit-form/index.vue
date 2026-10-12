@@ -7,7 +7,8 @@
           :rules="createRequiredRuleWithMessage(t('请输入团队名称'))"
           :label="t('团队名称')"
           name="name"
-          maxlength="64"
+          maxlength="20"
+          show-word-limit
           :placeholder="t('请输入名称')"
           autocomplete="off"
         />
@@ -17,7 +18,7 @@
           :rules="createRequiredRuleWithMessage(t('请输入团队口号'))"
           :label="t('团队口号')"
           name="slogan"
-          maxlength="128"
+          maxlength="20"
           show-word-limit
           :placeholder="t('请输入口号')"
           autocomplete="off"
