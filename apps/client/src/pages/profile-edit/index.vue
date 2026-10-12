@@ -44,7 +44,7 @@ import { buildInitialFormValue, toUpdateUserInfoRequest } from "./utils";
 const router = useRouter();
 const queryClient = useQueryClient();
 const { t } = useI18n();
-const { clientUserInfo, updateUserInfo } = useClientUserData(queryClient);
+const { clientUserInfo, refreshUserInfo } = useClientUserData(queryClient);
 const {
   data: queriedUserInfo,
   error,
@@ -76,10 +76,7 @@ function handleFormSubmit(value: ProfileEditFormValue) {
 
 async function handleUpdateSuccess() {
   showSuccessToast({ message: t("更新成功") });
-  await queryClient.invalidateQueries({ queryKey: CLIENT_USER_INFO_QUERY_OPTIONS.queryKey });
-  const refreshedUserInfo = await queryClient.fetchQuery(CLIENT_USER_INFO_QUERY_OPTIONS);
-  updateUserInfo(refreshedUserInfo);
-
+  await refreshUserInfo();
   return router.replace({ name: "profile" });
 }
 </script>
