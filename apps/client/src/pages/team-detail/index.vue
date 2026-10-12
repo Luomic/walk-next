@@ -33,7 +33,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
-import { getMemberTypeLabel } from "@/components/team/utils";
+import { getMemberTypeLabel, sortMembersByCaptain } from "@/components/team/utils";
 import { useClientUserData } from "@/composables";
 import { CLIENT_QUERY_KEY } from "@/constants";
 import { walkClientService } from "@/utils";
@@ -62,19 +62,7 @@ const {
   queryFn: () => walkClientService.QueryTeamDetail()
 });
 
-const sortedMembers = computed(() => {
-  const members = teamOverview.value?.members ?? [];
-
-  return members
-    .map((member, index) => ({ member, index }))
-    .toSorted((left, right) => {
-      if (left.member.role === right.member.role) return left.index - right.index;
-      if (left.member.role === "captain") return -1;
-      if (right.member.role === "captain") return 1;
-      return left.index - right.index;
-    })
-    .map(({ member }) => member);
-});
+const sortedMembers = computed(() => sortMembersByCaptain(teamOverview.value?.members ?? []));
 
 const teamTypeLabel = computed(() => {
   const captain = sortedMembers.value.find((member) => member.role === "captain");

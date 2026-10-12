@@ -114,6 +114,7 @@ import QrCode from "@/components/qr-code/index.vue";
 import TeamMemberDetailPopup from "@/components/team/team-member-detail-popup/index.vue";
 import TeamMemberList from "@/components/team/team-member-list/index.vue";
 import TeamOverviewCard from "@/components/team/team-overview-card/index.vue";
+import { sortMembersByCaptain } from "@/components/team/utils";
 import { confirmAction, useClientUserData } from "@/composables";
 import {
   CLIENT_QUERY_KEY,
@@ -173,19 +174,7 @@ const {
   }
 });
 
-const sortedMembers = computed(() => {
-  const members = teamOverview.value?.members ?? [];
-
-  return members
-    .map((member, index) => ({ member, index }))
-    .toSorted((left, right) => {
-      if (left.member.role === right.member.role) return left.index - right.index;
-      if (left.member.role === "captain") return -1;
-      if (right.member.role === "captain") return 1;
-      return left.index - right.index;
-    })
-    .map(({ member }) => member);
-});
+const sortedMembers = computed(() => sortMembersByCaptain(teamOverview.value?.members ?? []));
 
 const selectedMemberSummary = computed(() =>
   sortedMembers.value.find((member) => member.id === selectedMemberId.value)

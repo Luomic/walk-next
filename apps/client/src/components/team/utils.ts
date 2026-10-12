@@ -45,3 +45,16 @@ export const getMemberTypeLabel = (type: TeamMemberType) => MEMBER_TYPE_LABEL_MA
 export const getMemberRoleLabel = (role: TeamMemberRole) => MEMBER_ROLE_LABEL_MAP[role];
 
 export const getWalkStatusLabel = (status: WalkStatus) => WALK_STATUS_LABEL_MAP[status];
+
+export const sortMembersByCaptain = <T extends { role: TeamMemberRole }>(
+  members: readonly T[]
+): T[] =>
+  members
+    .map((member, index) => ({ member, index }))
+    .toSorted((left, right) => {
+      if (left.member.role === right.member.role) return left.index - right.index;
+      if (left.member.role === "captain") return -1;
+      if (right.member.role === "captain") return 1;
+      return left.index - right.index;
+    })
+    .map(({ member }) => member);
