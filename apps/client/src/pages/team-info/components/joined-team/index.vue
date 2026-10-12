@@ -105,7 +105,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { useClipboard, useEventListener, useShare } from "@vueuse/core";
 import { ErrorEmpty, LoadingContainer, RequestError, RESP_CODE } from "shared";
-import { type ShareSheetOption, showConfirmDialog, showFailToast, showSuccessToast } from "vant";
+import { type ShareSheetOption, showFailToast, showSuccessToast } from "vant";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -114,7 +114,7 @@ import QrCode from "@/components/qr-code/index.vue";
 import TeamMemberDetailPopup from "@/components/team/team-member-detail-popup/index.vue";
 import TeamMemberList from "@/components/team/team-member-list/index.vue";
 import TeamOverviewCard from "@/components/team/team-overview-card/index.vue";
-import { useClientUserData } from "@/composables";
+import { confirmAction, useClientUserData } from "@/composables";
 import {
   CLIENT_QUERY_KEY,
   TEAM_INVITE_CARD_TITLE_KEY,
@@ -314,52 +314,30 @@ const handleMemberPopupClose = () => {
 
 // MARK: 移出团队
 const handleRemoveMemberClick = (memberId: number) => {
-  void showConfirmDialog({
+  void confirmAction({
     title: t("移出团队"),
     message: t("确认将该队员移出团队吗？"),
-    theme: "round-button",
-    beforeClose: async (action) => {
-      if (action !== "confirm") return true;
-
-      try {
-        await mutateRemoveMember(memberId);
-        return true;
-      } catch {
-        return false;
-      }
-    }
-  })
-    .then(async () => {
+    action: () => mutateRemoveMember(memberId),
+    onSuccess: async () => {
       handleMemberPopupClose();
       showSuccessToast({ message: t("移出成功") });
       await refreshTeamData();
-    })
-    .catch(() => undefined);
+    }
+  });
 };
 
 // MARK: 移交队长
 const handleTransferCaptainClick = (memberId: number) => {
-  void showConfirmDialog({
+  void confirmAction({
     title: t("移交队长"),
     message: t("确认将队长移交给该队员吗？移交后你将变为队员。"),
-    theme: "round-button",
-    beforeClose: async (action) => {
-      if (action !== "confirm") return true;
-
-      try {
-        await mutateTransferCaptain(memberId);
-        return true;
-      } catch {
-        return false;
-      }
-    }
-  })
-    .then(async () => {
+    action: () => mutateTransferCaptain(memberId),
+    onSuccess: async () => {
       handleMemberPopupClose();
       showSuccessToast({ message: t("移交成功") });
       await Promise.all([refreshTeamData(), refreshClientUserData()]);
-    })
-    .catch(() => undefined);
+    }
+  });
 };
 
 // MARK: 分享
@@ -500,52 +478,30 @@ const handleShareOperation = async (option: ShareSheetOption) => {
 
 // MARK: 解散
 const handleDisbandClick = () => {
-  void showConfirmDialog({
+  void confirmAction({
     title: t("解散队伍"),
     message: t("确认解散当前队伍吗？解散后所有队员都需要重新加入队伍。"),
-    theme: "round-button",
-    beforeClose: async (action) => {
-      if (action !== "confirm") return true;
-
-      try {
-        await mutateDisbandTeam();
-        return true;
-      } catch {
-        return false;
-      }
-    }
-  })
-    .then(async () => {
+    action: () => mutateDisbandTeam(),
+    onSuccess: async () => {
       showSuccessToast({ message: t("解散成功") });
       await refreshClientUserData();
       await router.replace({ name: "team-info" });
-    })
-    .catch(() => undefined);
+    }
+  });
 };
 
 // MARK: 退出
 const handleLeaveTeamClick = () => {
-  void showConfirmDialog({
+  void confirmAction({
     title: t("退出队伍"),
     message: t("确认退出当前队伍吗？退出后需要重新加入队伍。"),
-    theme: "round-button",
-    beforeClose: async (action) => {
-      if (action !== "confirm") return true;
-
-      try {
-        await mutateLeaveTeam();
-        return true;
-      } catch {
-        return false;
-      }
-    }
-  })
-    .then(async () => {
+    action: () => mutateLeaveTeam(),
+    onSuccess: async () => {
       showSuccessToast({ message: t("退出成功") });
       await refreshClientUserData();
       await router.replace({ name: "team-info" });
-    })
-    .catch(() => undefined);
+    }
+  });
 };
 
 // MARK: 提交
@@ -556,26 +512,15 @@ const handleSubmissionClick = () => {
   }
 
   if (teamDetail.value.submitted) {
-    void showConfirmDialog({
+    void confirmAction({
       title: t("取消提交"),
       message: t("确认取消当前队伍提交状态吗？"),
-      theme: "round-button",
-      beforeClose: async (action) => {
-        if (action !== "confirm") return true;
-
-        try {
-          await mutateUndoTeamSubmission();
-          return true;
-        } catch {
-          return false;
-        }
-      }
-    })
-      .then(async () => {
+      action: () => mutateUndoTeamSubmission(),
+      onSuccess: async () => {
         showSuccessToast({ message: t("取消提交成功") });
         await refreshTeamData();
-      })
-      .catch(() => undefined);
+      }
+    });
     return;
   }
 
