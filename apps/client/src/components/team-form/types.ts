@@ -19,5 +19,3 @@ export interface TeamFormValue {
   allowMatch: boolean;
   routeName: RouteName;
 }
-
-export type { RouteName };

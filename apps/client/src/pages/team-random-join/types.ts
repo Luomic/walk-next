@@ -8,6 +8,4 @@ export interface RandomJoinRouteOption {
   distanceKm: number;
 }
 
-export type { RouteName };
-
 export type RandomJoinTeam = TeamRandomListItem;

@@ -27,7 +27,7 @@ const { setupClientUserDataQuery } = useClientUserData();
 const layoutComponent = computed<Component>(() => {
   const name = route.meta.layout?.name ?? "default-layout";
   if (name === "default-layout") return DefaultLayout;
-  return defineAsyncComponent(layouts[name as keyof typeof layouts]);
+  return defineAsyncComponent(layouts[name]);
 });
 
 useEventListener(document, "click", (event) => {

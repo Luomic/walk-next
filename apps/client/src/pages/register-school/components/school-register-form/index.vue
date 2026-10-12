@@ -95,7 +95,7 @@
             :class="styles.eyeButton"
             type="button"
             :aria-label="t('切换密码显示')"
-            @click.stop="() => togglePasswordVisible()"
+            @click.stop="togglePasswordVisible()"
           >
             <van-icon :name="isPasswordVisible ? 'eye-o' : 'closed-eye'" />
           </button>

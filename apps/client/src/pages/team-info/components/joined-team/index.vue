@@ -119,7 +119,7 @@ import {
   TEAM_INVITE_MESSAGE_KEYS
 } from "@/constants";
 import TeamPassCode from "@/pages/team-info/components/team-pass-code/index.vue";
-import { confirmAction, pickRandom, walkClientService } from "@/utils";
+import { confirmAction, getErrorMessage, pickRandom, walkClientService } from "@/utils";
 
 import styles from "./index.module.scss";
 
@@ -192,7 +192,7 @@ const refreshTeamData = async () => {
 };
 
 const getSubmitErrorMessage = (error: Error) => {
-  if (!(error instanceof RequestError)) return error.message || t("提交失败，请稍后重试");
+  if (!(error instanceof RequestError)) return getErrorMessage(error, t("提交失败，请稍后重试"));
 
   switch (error.code) {
     case RESP_CODE.TEAM_NOT_ENOUGH:
@@ -202,7 +202,7 @@ const getSubmitErrorMessage = (error: Error) => {
     case RESP_CODE.USER_NO_QUOTA:
       return t("当天名额已满");
     default:
-      return error.message || t("提交失败，请稍后重试");
+      return getErrorMessage(error, t("提交失败，请稍后重试"));
   }
 };
 
@@ -227,35 +227,35 @@ const { mutateAsync: mutateUndoTeamSubmission, isPending: isUndoTeamSubmissionPe
   useMutation({
     mutationFn: () => walkClientService.UndoTeamSubmission(),
     onError: (error) => {
-      showErrorToast(error.message || t("取消提交失败，请稍后重试"));
+      showErrorToast(getErrorMessage(error, t("取消提交失败，请稍后重试")));
     }
   });
 
 const { mutateAsync: mutateDisbandTeam, isPending: isDisbandTeamPending } = useMutation({
   mutationFn: () => walkClientService.DisbandTeam(),
   onError: (error) => {
-    showErrorToast(error.message || t("解散失败，请稍后重试"));
+    showErrorToast(getErrorMessage(error, t("解散失败，请稍后重试")));
   }
 });
 
 const { mutateAsync: mutateLeaveTeam, isPending: isLeaveTeamPending } = useMutation({
   mutationFn: () => walkClientService.LeaveTeam(),
   onError: (error) => {
-    showErrorToast(error.message || t("退出失败，请稍后重试"));
+    showErrorToast(getErrorMessage(error, t("退出失败，请稍后重试")));
   }
 });
 
 const { mutateAsync: mutateRemoveMember, isPending: isRemoveMemberPending } = useMutation({
   mutationFn: (memberId: number) => walkClientService.RemoveTeamMember({ id: memberId }),
   onError: (error) => {
-    showErrorToast(error.message || t("移出失败，请稍后重试"));
+    showErrorToast(getErrorMessage(error, t("移出失败，请稍后重试")));
   }
 });
 
 const { mutateAsync: mutateTransferCaptain, isPending: isTransferCaptainPending } = useMutation({
   mutationFn: (memberId: number) => walkClientService.UpdateTeamCaptain({ id: memberId }),
   onError: (error) => {
-    showErrorToast(error.message || t("移交失败，请稍后重试"));
+    showErrorToast(getErrorMessage(error, t("移交失败，请稍后重试")));
   }
 });
 
