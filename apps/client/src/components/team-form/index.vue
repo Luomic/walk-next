@@ -58,7 +58,7 @@
 
       <div :class="styles.submitArea">
         <van-button block round plain type="primary" native-type="submit" :loading="props.loading">
-          {{ props.submitLabel }}
+          {{ t(props.submitLabel) }}
         </van-button>
       </div>
     </van-form>
@@ -97,12 +97,12 @@ import type { ActionSheetAction, FormInstance } from "vant";
 import { computed, reactive, ref, useTemplateRef } from "vue";
 import { useI18n } from "vue-i18n";
 
-import { ROUTE_OPTIONS } from "@/components/team/utils";
+import { isRouteName, ROUTE_OPTIONS } from "@/components/team/utils";
 import { CLIENT_QUERY_KEY } from "@/constants";
 import { walkClientService } from "@/utils";
 
 import styles from "./index.module.scss";
-import type { MatchValue, OpenedSelect, RouteName, TeamFormRawValue, TeamFormValue } from "./types";
+import type { MatchValue, OpenedSelect, TeamFormRawValue, TeamFormValue } from "./types";
 
 const props = defineProps<{
   loading: boolean;
@@ -166,9 +166,6 @@ watchImmediate(
 // #region 派生状态
 const isMatchValue = (value: string): value is MatchValue =>
   MATCH_OPTIONS.some((option) => option.value === value);
-
-const isRouteName = (value: string): value is RouteName =>
-  ROUTE_OPTIONS.some((option) => option.value === value);
 
 const selectedMatchLabel = computed(() => {
   const option = MATCH_OPTIONS.find((item) => item.value === formValue.allowMatch);

@@ -1,6 +1,6 @@
-export type MatchValue = "false" | "true";
+import type { RouteName } from "@/components/team/utils";
 
-export type RouteName = "pf-half" | "pf-full" | "mgs";
+export type MatchValue = "false" | "true";
 
 export type OpenedSelect = "" | "match" | "route";
 
@@ -19,3 +19,5 @@ export interface TeamFormValue {
   allowMatch: boolean;
   routeName: RouteName;
 }
+
+export type { RouteName };

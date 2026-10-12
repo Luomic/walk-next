@@ -1,6 +1,6 @@
 import type { WalkStatus } from "api/types/client";
 
-import type { RouteName, TeamMemberRole, TeamMemberType } from "./types";
+import type { TeamMemberRole, TeamMemberType } from "./types";
 
 export const ROUTE_OPTIONS = [
   { label: "屏峰半程", value: "pf-half" },
@@ -8,11 +8,7 @@ export const ROUTE_OPTIONS = [
   { label: "莫干山全程", value: "mgs" }
 ] as const;
 
-const ROUTE_LABEL_MAP: Record<RouteName, string> = {
-  "pf-half": "屏峰半程",
-  "pf-full": "屏峰全程",
-  mgs: "莫干山全程"
-};
+export type RouteName = (typeof ROUTE_OPTIONS)[number]["value"];
 
 const MEMBER_TYPE_LABEL_MAP: Record<TeamMemberType, string> = {
   student: "学生",
@@ -38,12 +34,11 @@ const WALK_STATUS_LABEL_MAP: Record<WalkStatus, string> = {
   completed: "已完成"
 };
 
-export const isRouteName = (value: string): value is RouteName => value in ROUTE_LABEL_MAP;
+export const isRouteName = (value: string): value is RouteName =>
+  ROUTE_OPTIONS.some((option) => option.value === value);
 
-export const getRouteLabel = (routeName: string) => {
-  if (!isRouteName(routeName)) return routeName;
-  return ROUTE_LABEL_MAP[routeName];
-};
+export const getRouteLabel = (routeName: string) =>
+  ROUTE_OPTIONS.find((option) => option.value === routeName)?.label ?? routeName;
 
 export const getMemberTypeLabel = (type: TeamMemberType) => MEMBER_TYPE_LABEL_MAP[type];
 

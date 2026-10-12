@@ -11,8 +11,8 @@ export interface ConfirmActionOptions {
  * 显示确认对话框，确认后执行 action，成功后执行 onSuccess
  * 用户取消时静默处理
  */
-export const confirmAction = (options: ConfirmActionOptions) => {
-  void showConfirmDialog({
+export const confirmAction = (options: ConfirmActionOptions) =>
+  showConfirmDialog({
     title: options.title,
     message: options.message,
     theme: "round-button",
@@ -31,4 +31,3 @@ export const confirmAction = (options: ConfirmActionOptions) => {
       await options.onSuccess();
     })
     .catch(() => undefined);
-};

@@ -1,6 +1,6 @@
 import type { TeamRandomListItem } from "api/types/client";
 
-import type { RouteName } from "@/components/team-form/types";
+import type { RouteName } from "@/components/team/utils";
 
 export interface RandomJoinRouteOption {
   name: RouteName;

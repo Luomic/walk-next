@@ -1,9 +1,7 @@
 import type { QueryTeamDetailResponse } from "api/types/client";
 
-import { getRouteLabel, isRouteName } from "@/components/team/utils";
+import { isRouteName } from "@/components/team/utils";
 import type { TeamFormRawValue } from "@/components/team-form/types";
-
-export { getRouteLabel, isRouteName };
 
 export function buildInitialFormValue(team?: QueryTeamDetailResponse): TeamFormRawValue {
   const routeName = team?.route_name ?? "";

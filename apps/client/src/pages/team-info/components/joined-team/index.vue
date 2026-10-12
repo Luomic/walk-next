@@ -103,7 +103,7 @@
 
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { useClipboard, useEventListener, useShare } from "@vueuse/core";
+import { useClipboard, useEventListener, useShare, useTimeoutFn } from "@vueuse/core";
 import { ErrorEmpty, LoadingContainer, RequestError, RESP_CODE } from "shared";
 import { type ShareSheetOption, showFailToast, showSuccessToast } from "vant";
 import { computed, ref } from "vue";
@@ -334,7 +334,6 @@ const handleTransferCaptainClick = (memberId: number) => {
 // MARK: 分享
 const isShareSheetShow = ref(false);
 const isQrPopupShow = ref(false);
-const qqShareTimer = ref<ReturnType<typeof setTimeout> | null>(null);
 
 const pickRandom = <T,>(l: readonly [T, ...T[]]): T =>
   l[Math.floor(Math.random() * l.length)] ?? l[0];
@@ -372,11 +371,22 @@ const share = useShare(
   }))
 );
 
+const { start: startQqShareTimer, stop: stopQqShareTimer } = useTimeoutFn(
+  () => {
+    const fallbackUrl = new URL("https://connect.qq.com/widget/shareqq/");
+    fallbackUrl.searchParams.set("url", shareData.value.url);
+    fallbackUrl.searchParams.set("title", shareData.value.title);
+    fallbackUrl.searchParams.set("summary", shareData.value.text);
+    fallbackUrl.searchParams.set("pics", shareData.value.image);
+    fallbackUrl.searchParams.set("desc", shareData.value.desc);
+    window.open(fallbackUrl.toString());
+  },
+  1500,
+  { immediate: false }
+);
+
 useEventListener(document, "visibilitychange", () => {
-  if (document.hidden && qqShareTimer.value) {
-    clearTimeout(qqShareTimer.value);
-    qqShareTimer.value = null;
-  }
+  if (document.hidden) stopQqShareTimer();
 });
 
 const shareOptions = computed<ShareSheetOption[][]>(() => [
@@ -406,16 +416,7 @@ const handleShareOperation = async (option: ShareSheetOption) => {
             `&url=${encodeURIComponent(shareData.value.url)}` +
             `&image_url=${encodeURIComponent(shareData.value.image)}`;
 
-          qqShareTimer.value = setTimeout(() => {
-            const fallbackUrl = new URL("https://connect.qq.com/widget/shareqq/");
-            fallbackUrl.searchParams.set("url", shareData.value.url);
-            fallbackUrl.searchParams.set("title", shareData.value.title);
-            fallbackUrl.searchParams.set("summary", shareData.value.text);
-            fallbackUrl.searchParams.set("pics", shareData.value.image);
-            fallbackUrl.searchParams.set("desc", shareData.value.desc);
-            window.open(fallbackUrl.toString());
-            qqShareTimer.value = null;
-          }, 1500);
+          startQqShareTimer();
           window.location.href = mqqUrl;
         }
         break;
