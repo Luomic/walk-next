@@ -28,8 +28,8 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
-import { CLIENT_USER_INFO_QUERY_OPTIONS, confirmAction, useClientUserData } from "@/composables";
-import { walkClientService } from "@/utils";
+import { CLIENT_USER_INFO_QUERY_OPTIONS, useClientUserData } from "@/composables";
+import { confirmAction, walkClientService } from "@/utils";
 
 import ProfileEditForm from "./components/profile-edit-form/index.vue";
 import styles from "./index.module.scss";

@@ -110,7 +110,7 @@ import TeamMemberDetailPopup from "@/components/team/team-member-detail-popup/in
 import TeamMemberList from "@/components/team/team-member-list/index.vue";
 import TeamOverviewCard from "@/components/team/team-overview-card/index.vue";
 import { sortMembersByCaptain } from "@/components/team/utils";
-import { confirmAction, useClientUserData } from "@/composables";
+import { useClientUserData } from "@/composables";
 import {
   CLIENT_QUERY_KEY,
   TEAM_INVITE_CARD_TITLE_KEY,
@@ -119,7 +119,7 @@ import {
   TEAM_INVITE_MESSAGE_KEYS
 } from "@/constants";
 import TeamPassCode from "@/pages/team-info/components/team-pass-code/index.vue";
-import { pickRandom, walkClientService } from "@/utils";
+import { confirmAction, pickRandom, walkClientService } from "@/utils";
 
 import styles from "./index.module.scss";
 
