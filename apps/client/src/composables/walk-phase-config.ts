@@ -8,7 +8,7 @@ import { INACTIVE_WALK_STAGE, WALK_STAGES } from "@/constants/walk-progress";
 import { walkClientService } from "@/utils";
 
 /** 毅行阶段查询配置 */
-export const WALK_PHASE_QUERY_OPTIONS = queryOptions({
+const WALK_PHASE_QUERY_OPTIONS = queryOptions({
   queryKey: [CLIENT_QUERY_KEY.USER.PHASE] as const,
   queryFn: () => walkClientService.QueryPhase()
 });

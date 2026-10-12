@@ -23,15 +23,6 @@ export interface LayoutRegistry {
 
 export type LayoutName = keyof LayoutRegistry;
 
-export type RouteLayout =
-  | { name?: "default-layout"; props?: DefaultLayoutProps }
-  | {
-      [N in Exclude<LayoutName, "default-layout">]: {
-        name: N;
-        props?: LayoutRegistry[N]["props"];
-      };
-    }[Exclude<LayoutName, "default-layout">];
-
 const modules = import.meta.glob<AsyncComponentLoader>("./*/index.vue");
 
 const result: Record<string, AsyncComponentLoader> = {};

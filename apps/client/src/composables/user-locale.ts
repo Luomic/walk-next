@@ -32,7 +32,7 @@ const getInitLocale = (): string => {
   return "en";
 };
 
-export const loadLocaleMessages = async (i18n: Composer, locale: ValidLanguage): Promise<void> => {
+const loadLocaleMessages = async (i18n: Composer, locale: ValidLanguage): Promise<void> => {
   const messages = await import(`../locales/${locale}.yaml`);
   i18n.setLocaleMessage(locale, messages.default);
   return nextTick();

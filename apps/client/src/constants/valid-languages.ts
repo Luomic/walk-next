@@ -2,7 +2,7 @@ export const VALID_LANG = ["zh-Hans", "zh-Hant", "en"] as const;
 
 export type ValidLanguage = (typeof VALID_LANG)[number];
 
-export type LangMeta = {
+type LangMeta = {
   name: string;
   short: string;
   vant: string;
