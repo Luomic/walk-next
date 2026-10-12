@@ -97,6 +97,7 @@ import type { ActionSheetAction, FormInstance } from "vant";
 import { computed, reactive, ref, useTemplateRef } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { ROUTE_OPTIONS } from "@/components/team/utils";
 import { CLIENT_QUERY_KEY } from "@/constants";
 import { walkClientService } from "@/utils";
 
@@ -131,12 +132,6 @@ const {
 const MATCH_OPTIONS = [
   { label: "不随机", value: "false" },
   { label: "随机匹配", value: "true" }
-] as const;
-
-const ROUTE_OPTIONS = [
-  { label: "屏峰半程", value: "pf-half" },
-  { label: "屏峰全程", value: "pf-full" },
-  { label: "莫干山全程", value: "mgs" }
 ] as const;
 
 const formRef = useTemplateRef<FormInstance>("formRef");

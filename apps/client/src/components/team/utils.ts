@@ -2,6 +2,12 @@ import type { WalkStatus } from "api/types/client";
 
 import type { RouteName, TeamMemberRole, TeamMemberType } from "./types";
 
+export const ROUTE_OPTIONS = [
+  { label: "屏峰半程", value: "pf-half" },
+  { label: "屏峰全程", value: "pf-full" },
+  { label: "莫干山全程", value: "mgs" }
+] as const;
+
 const ROUTE_LABEL_MAP: Record<RouteName, string> = {
   "pf-half": "屏峰半程",
   "pf-full": "屏峰全程",
