@@ -35,8 +35,8 @@ import type { QueryTeamBasicInfoResponse } from "api/types/client";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { getRouteLabel } from "@/components/team/utils";
 import { INACTIVE_WALK_STAGE, WALK_STAGES } from "@/constants/walk-progress";
-import { getRouteLabel } from "@/pages/team-detail/utils";
 
 import styles from "./index.module.scss";
 

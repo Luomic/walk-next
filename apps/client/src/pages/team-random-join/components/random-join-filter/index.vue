@@ -18,7 +18,9 @@
 </template>
 
 <script setup lang="ts">
-import type { RandomJoinRouteOption, RouteName } from "../../types";
+import type { RouteName } from "@/components/team/utils";
+
+import type { RandomJoinRouteOption } from "../../types";
 import styles from "./index.module.scss";
 
 const props = defineProps<{

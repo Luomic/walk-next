@@ -19,7 +19,7 @@ import type { TeamSummary } from "api/types/client";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import { getRouteLabel } from "../../utils";
+import { getRouteLabel } from "../utils";
 import styles from "./index.module.scss";
 
 const props = defineProps<{

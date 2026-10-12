@@ -69,6 +69,17 @@ export const useClientUserData = (queryClient: QueryClient = useQueryClient()) =
     queryClient.clear();
   };
 
+  /** 刷新当前用户信息并更新 store */
+  const refreshUserInfo = async () => {
+    // refetchType: 'none' 只标记过期不触发 observer 后台 refetch，由下方 fetchQuery 发起唯一一次请求
+    await queryClient.invalidateQueries({
+      queryKey: CLIENT_USER_INFO_QUERY_OPTIONS.queryKey,
+      refetchType: "none"
+    });
+    const userInfo = await queryClient.fetchQuery(CLIENT_USER_INFO_QUERY_OPTIONS);
+    updateUserInfo(userInfo);
+  };
+
   /** 启动 query，需要在顶层组件调用 */
   const setupClientUserDataQuery = () => {
     if (!getCurrentScope())
@@ -97,6 +108,7 @@ export const useClientUserData = (queryClient: QueryClient = useQueryClient()) =
     clientUserInfo,
     updateClientLoginData,
     updateUserInfo,
+    refreshUserInfo,
     resetClientUserData,
     setupClientUserDataQuery
   };

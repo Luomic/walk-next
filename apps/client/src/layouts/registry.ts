@@ -23,6 +23,7 @@ export interface LayoutRegistry {
 
 export type LayoutName = keyof LayoutRegistry;
 
+/** 路由 meta.layout 的类型：name 决定布局，props 随布局而变 */
 export type RouteLayout =
   | { name?: "default-layout"; props?: DefaultLayoutProps }
   | {

@@ -9,37 +9,31 @@
     />
 
     <template v-else>
-      <error-empty
+      <query-state-container
         :error="teamDetailError"
-        :disabled="isTeamDetailLoading"
-        @btn-click="handleTeamDetailRetry"
-      >
-        <loading-container
-          :class="styles.loadingContainer"
-          :loading="isTeamDetailLoading"
-          :text="t('refresh.loading')"
-        >
-          <van-empty v-if="!isTeamDetailLoading" :description="t('暂无团队详细信息')" />
-        </loading-container>
-      </error-empty>
+        :loading="isTeamDetailLoading"
+        :loading-text="t('refresh.loading')"
+        :empty-description="t('暂无团队详细信息')"
+        @retry="handleTeamDetailRetry"
+      />
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useQuery } from "@tanstack/vue-query";
-import { ErrorEmpty, LoadingContainer } from "shared";
+import { QueryStateContainer } from "shared";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import { getMemberTypeLabel, sortMembersByCaptain } from "@/components/team/utils";
 import { useClientUserData } from "@/composables";
 import { CLIENT_QUERY_KEY } from "@/constants";
 import { walkClientService } from "@/utils";
 
 import TeamBasicDetail from "./components/team-basic-detail/index.vue";
 import styles from "./index.module.scss";
-import { getMemberTypeLabel } from "./utils";
 
 const router = useRouter();
 const { t } = useI18n();
@@ -62,19 +56,7 @@ const {
   queryFn: () => walkClientService.QueryTeamDetail()
 });
 
-const sortedMembers = computed(() => {
-  const members = teamOverview.value?.members ?? [];
-
-  return members
-    .map((member, index) => ({ member, index }))
-    .toSorted((left, right) => {
-      if (left.member.role === right.member.role) return left.index - right.index;
-      if (left.member.role === "captain") return -1;
-      if (right.member.role === "captain") return 1;
-      return left.index - right.index;
-    })
-    .map(({ member }) => member);
-});
+const sortedMembers = computed(() => sortMembersByCaptain(teamOverview.value?.members ?? []));
 
 const teamTypeLabel = computed(() => {
   const captain = sortedMembers.value.find((member) => member.role === "captain");

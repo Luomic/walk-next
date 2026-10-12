@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
 import { CLIENT_QUERY_KEY } from "@/constants";
-import { walkClientService } from "@/utils";
+import { getErrorMessage, walkClientService } from "@/utils";
 
 import { useClientUserData } from "./client-user-data";
 
@@ -33,9 +33,7 @@ export const setupClientNoticeQuery = () => {
         notice_id: noticeId
       }),
     onError: (error: unknown) => {
-      showFailToast({
-        message: error instanceof Error ? error.message : t("通知确认失败，请稍后重试")
-      });
+      showFailToast({ message: getErrorMessage(error, t("通知确认失败，请稍后重试")) });
     }
   });
 

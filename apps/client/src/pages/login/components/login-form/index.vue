@@ -32,7 +32,7 @@
             :class="styles.eyeButton"
             type="button"
             :aria-label="t('切换密码显示')"
-            @click.stop="handlePasswordVisibleClick"
+            @click.stop="togglePasswordVisible()"
           >
             <van-icon :name="isPasswordVisible ? 'eye-o' : 'closed-eye'" />
           </button>
@@ -56,13 +56,14 @@
 </template>
 
 <script setup lang="ts">
+import { useToggle } from "@vueuse/core";
 import { createRequiredRuleWithMessage } from "shared";
 import type { FormInstance } from "vant";
-import { showToast } from "vant";
-import { reactive, ref, useTemplateRef } from "vue";
+import { reactive, useTemplateRef } from "vue";
 import { useI18n } from "vue-i18n";
 
 import TermsAgreement from "@/components/terms-agreement/index.vue";
+import { useTermsAgreementGate } from "@/composables";
 import { TEL_PATTERN } from "@/constants/validation";
 
 import type { LoginFormValue } from "../../types";
@@ -93,12 +94,8 @@ const formValue = reactive<LoginFormValue>({
   password: ""
 });
 
-const isPasswordVisible = ref(false);
-const isAgreed = ref(false);
-
-const handlePasswordVisibleClick = () => {
-  isPasswordVisible.value = !isPasswordVisible.value;
-};
+const [isPasswordVisible, togglePasswordVisible] = useToggle();
+const { isAgreed, checkAgreed } = useTermsAgreementGate();
 
 const handleSubmit = async () => {
   formValue.account = formValue.account.trim();
@@ -110,10 +107,7 @@ const handleSubmit = async () => {
     return;
   }
 
-  if (!isAgreed.value) {
-    showToast({ message: t("请阅读并同意《用户协议与隐私政策》") });
-    return;
-  }
+  if (!checkAgreed()) return;
 
   emit("submit", {
     account: formValue.account,

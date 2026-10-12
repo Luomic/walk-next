@@ -33,7 +33,7 @@ import tomatoJamImage from "@/assets/images/tomato-jam.png";
 import Decoration from "@/components/decoration/index.vue";
 import IcpRecord from "@/components/icp-record/index.vue";
 import LanguageSwitcher from "@/components/language-switcher/index.vue";
-import { walkClientService } from "@/utils";
+import { getErrorMessage, walkClientService } from "@/utils";
 
 import SchoolRegisterForm from "./components/school-register-form/index.vue";
 import styles from "./index.module.scss";
@@ -77,8 +77,7 @@ const { mutate: mutateRegister, isPending: isRegisterPending } = useMutation({
     router.replace({ name: "login", query: route.query });
   },
   onError: (error: unknown) => {
-    const message = error instanceof Error ? error.message : t("注册失败，请稍后重试");
-    showFailToast({ message });
+    showFailToast({ message: getErrorMessage(error, t("注册失败，请稍后重试")) });
   }
 });
 

@@ -40,8 +40,6 @@
   }
 
   .submitArea {
-    display: flex;
-    justify-content: center;
-    margin-top: 8px;
+    @include ui.submit-area;
   }
 }

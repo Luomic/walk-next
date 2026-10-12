@@ -35,22 +35,22 @@
 </template>
 
 <script setup lang="ts">
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import { useMutation, useQuery } from "@tanstack/vue-query";
 import { useScroll } from "@vueuse/core";
-import { RequestError, useStoredUrlQuery } from "shared";
+import { useStoredUrlQuery } from "shared";
 import { showFailToast, showSuccessToast } from "vant";
 import { computed, onMounted, ref, useTemplateRef, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
-import { CLIENT_USER_INFO_QUERY_OPTIONS, useClientUserData } from "@/composables";
+import type { RouteName } from "@/components/team/utils";
+import { useClientUserData } from "@/composables";
 import { CLIENT_QUERY_KEY, MAXIMUM_TEAM_SIZE } from "@/constants";
-import { walkClientService } from "@/utils";
+import { getErrorMessage, walkClientService } from "@/utils";
 
 import RandomJoinFilter from "./components/random-join-filter/index.vue";
 import RandomTeamList from "./components/random-team-list/index.vue";
 import styles from "./index.module.scss";
-import type { RouteName } from "./types";
 
 // #region 路线筛选与列表查询
 const ROUTE_OPTIONS = [
@@ -61,8 +61,7 @@ const ROUTE_OPTIONS = [
 
 const router = useRouter();
 const { t } = useI18n();
-const queryClient = useQueryClient();
-const { updateUserInfo } = useClientUserData();
+const { refreshUserInfo } = useClientUserData();
 
 /** 选中路线，通过 URL Query 持久化，刷新后保留 */
 const { urlQuery } = useStoredUrlQuery<{ route: RouteName }>({
@@ -148,20 +147,13 @@ const { mutate: mutateRandomJoinTeam, isPending: isRandomJoinPending } = useMuta
     showSuccessToast({ message: t("加入成功！") });
 
     // 人数与加入次数已变动，拉取最新用户信息
-    const userInfo = await queryClient.fetchQuery({
-      ...CLIENT_USER_INFO_QUERY_OPTIONS,
-      staleTime: 0
-    });
-
-    updateUserInfo(userInfo);
+    await refreshUserInfo();
 
     router.replace({ name: "team-info" });
   },
   onError: (error) => {
     joiningTeamId.value = undefined;
-    showFailToast({
-      message: (error instanceof RequestError && error.message) || t("加入失败，请稍后重试")
-    });
+    showFailToast({ message: getErrorMessage(error, t("加入失败，请稍后重试")) });
   }
 });
 

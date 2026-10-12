@@ -1,5 +1,5 @@
 <template>
-  <loading-container :loading="isQuotaFetching" :text="t('refresh.loading')">
+  <loading-container :loading="props.submitted && isQuotaFetching" :text="t('refresh.loading')">
     <van-form ref="formRef" :disabled="props.loading" @submit="handleSubmit">
       <van-cell-group inset>
         <van-field
@@ -58,7 +58,7 @@
 
       <div :class="styles.submitArea">
         <van-button block round plain type="primary" native-type="submit" :loading="props.loading">
-          {{ t("更新信息") }}
+          {{ t(props.submitLabel) }}
         </van-button>
       </div>
     </van-form>
@@ -97,31 +97,27 @@ import type { ActionSheetAction, FormInstance } from "vant";
 import { computed, reactive, ref, useTemplateRef } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { isRouteName, ROUTE_OPTIONS } from "@/components/team/utils";
 import { CLIENT_QUERY_KEY } from "@/constants";
 import { walkClientService } from "@/utils";
 
-import type {
-  MatchValue,
-  OpenedTeamEditSelect,
-  TeamEditFormRawValue,
-  TeamEditFormValue
-} from "../../types";
-import { getRouteLabel, isRouteName } from "../../utils";
 import styles from "./index.module.scss";
+import type { MatchValue, OpenedSelect, TeamFormRawValue, TeamFormValue } from "./types";
 
 const props = defineProps<{
   loading: boolean;
-  initialValue: TeamEditFormRawValue;
-  submitted: boolean;
+  initialValue?: TeamFormRawValue;
+  submitted?: boolean;
+  submitLabel: string;
 }>();
 
 const emit = defineEmits<{
-  submit: [value: TeamEditFormValue];
+  submit: [value: TeamFormValue];
 }>();
 
 const { t } = useI18n();
 
-// 查询路线是否有名额
+// 查询路线是否有名额（仅编辑模式且已提交时启用）
 const {
   data: quotaData,
   isFetching: isQuotaFetching,
@@ -138,17 +134,11 @@ const MATCH_OPTIONS = [
   { label: "随机匹配", value: "true" }
 ] as const;
 
-const ROUTE_OPTIONS = [
-  { label: "屏峰半程", value: "pf-half" },
-  { label: "屏峰全程", value: "pf-full" },
-  { label: "莫干山全程", value: "mgs" }
-] as const;
-
 const formRef = useTemplateRef<FormInstance>("formRef");
 
-const openedSelect = ref<OpenedTeamEditSelect>("");
+const openedSelect = ref<OpenedSelect>("");
 
-const formValue = reactive<TeamEditFormRawValue>({
+const formValue = reactive<TeamFormRawValue>({
   name: "",
   slogan: "",
   password: "",
@@ -164,9 +154,11 @@ const selectErrors = reactive({
 watchImmediate(
   () => props.initialValue,
   (value) => {
-    Object.assign(formValue, value);
-    selectErrors.allowMatch = "";
-    selectErrors.routeName = "";
+    if (value) {
+      Object.assign(formValue, value);
+      selectErrors.allowMatch = "";
+      selectErrors.routeName = "";
+    }
   }
 );
 // #endregion
@@ -180,9 +172,10 @@ const selectedMatchLabel = computed(() => {
   return option ? t(option.label) : "";
 });
 
-const selectedRouteLabel = computed(() =>
-  formValue.routeName ? t(getRouteLabel(formValue.routeName)) : ""
-);
+const selectedRouteLabel = computed(() => {
+  const option = ROUTE_OPTIONS.find((item) => item.value === formValue.routeName);
+  return option ? t(option.label) : "";
+});
 
 const matchActions = computed<ActionSheetAction[]>(() =>
   MATCH_OPTIONS.map((option) => ({
@@ -213,7 +206,7 @@ const routeActions = computed<ActionSheetAction[]>(() =>
 // #endregion
 
 // #region 交互与提交
-const toggleSelect = async (selectName: OpenedTeamEditSelect) => {
+const toggleSelect = async (selectName: OpenedSelect) => {
   if (openedSelect.value === selectName) {
     openedSelect.value = "";
     return;

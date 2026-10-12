@@ -1,30 +1,28 @@
 <template>
   <div :class="styles.page">
-    <create-team-form :loading="isCreatePending" @submit="handleCreateSubmit" />
+    <team-form :loading="isCreatePending" submit-label="创建团队" @submit="handleCreateSubmit" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import { useMutation } from "@tanstack/vue-query";
 import { showFailToast, showSuccessToast } from "vant";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import TeamForm from "@/components/team-form/index.vue";
+import type { TeamFormValue } from "@/components/team-form/types";
 import { useClientUserData } from "@/composables";
-import { CLIENT_QUERY_KEY } from "@/constants";
-import { walkClientService } from "@/utils";
+import { getErrorMessage, walkClientService } from "@/utils";
 
-import CreateTeamForm from "./components/create-team-form/index.vue";
 import styles from "./index.module.scss";
-import type { CreateTeamFormValue } from "./types";
 
 const router = useRouter();
 const { t } = useI18n();
-const queryClient = useQueryClient();
-const { updateUserInfo } = useClientUserData();
+const { refreshUserInfo } = useClientUserData();
 
 const { mutate: mutateCreateTeam, isPending: isCreatePending } = useMutation({
-  mutationFn: (value: CreateTeamFormValue) =>
+  mutationFn: (value: TeamFormValue) =>
     walkClientService.CreateTeam({
       name: value.name,
       slogan: value.slogan,
@@ -36,24 +34,15 @@ const { mutate: mutateCreateTeam, isPending: isCreatePending } = useMutation({
     }),
   onSuccess: async () => {
     showSuccessToast({ message: t("创建成功！") });
-
-    const userInfo = await queryClient.fetchQuery({
-      queryKey: [CLIENT_QUERY_KEY.USER.SELF],
-      queryFn: () => walkClientService.QueryUserInfo()
-    });
-
-    updateUserInfo(userInfo);
-
+    await refreshUserInfo();
     router.replace({ name: "team-info" });
   },
   onError: (error: unknown) => {
-    const message = error instanceof Error ? error.message : t("创建失败，请稍后重试");
-
-    showFailToast({ message });
+    showFailToast({ message: getErrorMessage(error, t("创建失败，请稍后重试")) });
   }
 });
 
-const handleCreateSubmit = (value: CreateTeamFormValue) => {
+const handleCreateSubmit = (value: TeamFormValue) => {
   if (isCreatePending.value) return;
   mutateCreateTeam(value);
 };

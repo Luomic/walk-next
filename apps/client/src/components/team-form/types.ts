@@ -1,10 +1,10 @@
-export type RouteName = "pf-half" | "pf-full" | "mgs";
+import type { RouteName } from "@/components/team/utils";
 
 export type MatchValue = "false" | "true";
 
-export type OpenedTeamEditSelect = "" | "match" | "route";
+export type OpenedSelect = "" | "match" | "route";
 
-export interface TeamEditFormRawValue {
+export interface TeamFormRawValue {
   name: string;
   slogan: string;
   password: string;
@@ -12,7 +12,7 @@ export interface TeamEditFormRawValue {
   routeName: RouteName | "";
 }
 
-export interface TeamEditFormValue {
+export interface TeamFormValue {
   name: string;
   slogan: string;
   password: string;

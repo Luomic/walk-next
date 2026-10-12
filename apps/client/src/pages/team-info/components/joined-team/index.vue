@@ -1,78 +1,73 @@
 <template>
   <div :class="styles.page">
-    <error-empty
+    <query-state-container
       :error="overviewError"
-      :disabled="isOverviewLoading"
+      :loading="isOverviewLoading"
+      :data="teamOverview"
       :btn-text="t('刷新')"
-      @btn-click="reload"
+      :loading-text="t('refresh.loading')"
+      :empty-description="t('暂无团队信息')"
+      @retry="reload"
     >
-      <loading-container
-        :class="styles.loadingContainer"
-        :loading="isOverviewLoading"
-        :text="t('refresh.loading')"
-      >
-        <template v-if="teamOverview && !isOverviewLoading">
-          <team-pass-code
-            v-if="teamDetail"
-            :team-id="teamDetail.id"
-            :submitted="teamDetail.submitted"
-          />
+      <template v-if="teamOverview">
+        <team-pass-code
+          v-if="teamDetail"
+          :team-id="teamDetail.id"
+          :submitted="teamDetail.submitted"
+        />
 
-          <team-overview-card :team="teamOverview.team" @detail="handleDetailClick" />
+        <team-overview-card :team="teamOverview.team" @detail="handleDetailClick" />
 
-          <team-member-list :members="sortedMembers" @member-click="handleMemberClick" />
+        <team-member-list :members="sortedMembers" @member-click="handleMemberClick" />
 
-          <section v-if="isCaptain" :class="styles.actionArea">
-            <van-button
-              block
-              round
-              type="primary"
-              plain
-              :disabled="!teamDetail"
-              @click="isShareSheetShow = true"
-            >
-              {{ t("分享队伍") }}
-            </van-button>
-            <van-button
-              block
-              round
-              type="danger"
-              plain
-              :loading="isDisbandTeamPending"
-              @click="handleDisbandClick"
-            >
-              {{ t("解散队伍") }}
-            </van-button>
-            <van-button
-              block
-              round
-              type="primary"
-              plain
-              :loading="isSubmitTeamPending || isUndoTeamSubmissionPending"
-              :disabled="isTeamDetailLoading"
-              @click="handleSubmissionClick"
-            >
-              {{ teamDetail?.submitted ? t("取消提交") : t("提交队伍") }}
-            </van-button>
-          </section>
+        <section v-if="isCaptain" :class="styles.actionArea">
+          <van-button
+            block
+            round
+            type="primary"
+            plain
+            :disabled="!teamDetail"
+            @click="isShareSheetShow = true"
+          >
+            {{ t("分享队伍") }}
+          </van-button>
+          <van-button
+            block
+            round
+            type="danger"
+            plain
+            :loading="isDisbandTeamPending"
+            @click="handleDisbandClick"
+          >
+            {{ t("解散队伍") }}
+          </van-button>
+          <van-button
+            block
+            round
+            type="primary"
+            plain
+            :loading="isSubmitTeamPending || isUndoTeamSubmissionPending"
+            :disabled="isTeamDetailLoading"
+            @click="handleSubmissionClick"
+          >
+            {{ teamDetail?.submitted ? t("取消提交") : t("提交队伍") }}
+          </van-button>
+        </section>
 
-          <section v-else-if="isLeaveTeamVisible" :class="styles.actionArea">
-            <van-button
-              block
-              round
-              type="danger"
-              plain
-              :loading="isLeaveTeamPending"
-              @click="handleLeaveTeamClick"
-            >
-              {{ t("退出队伍") }}
-            </van-button>
-          </section>
-        </template>
-
-        <van-empty v-else-if="!isOverviewLoading" :description="t('暂无团队信息')" />
-      </loading-container>
-    </error-empty>
+        <section v-else-if="isLeaveTeamVisible" :class="styles.actionArea">
+          <van-button
+            block
+            round
+            type="danger"
+            plain
+            :loading="isLeaveTeamPending"
+            @click="handleLeaveTeamClick"
+          >
+            {{ t("退出队伍") }}
+          </van-button>
+        </section>
+      </template>
+    </query-state-container>
 
     <team-member-detail-popup
       :opened="isMemberDetailPopupOpened"
@@ -104,13 +99,17 @@
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { useClipboard, useEventListener, useShare, useTimeoutFn } from "@vueuse/core";
-import { ErrorEmpty, LoadingContainer, RequestError, RESP_CODE } from "shared";
-import { type ShareSheetOption, showConfirmDialog, showFailToast, showSuccessToast } from "vant";
+import { QueryStateContainer, RequestError, RESP_CODE } from "shared";
+import { type ShareSheetOption, showFailToast, showSuccessToast } from "vant";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
 import QrCode from "@/components/qr-code/index.vue";
+import TeamMemberDetailPopup from "@/components/team/team-member-detail-popup/index.vue";
+import TeamMemberList from "@/components/team/team-member-list/index.vue";
+import TeamOverviewCard from "@/components/team/team-overview-card/index.vue";
+import { sortMembersByCaptain } from "@/components/team/utils";
 import { useClientUserData } from "@/composables";
 import {
   CLIENT_QUERY_KEY,
@@ -119,11 +118,8 @@ import {
   TEAM_INVITE_LINK_CARD_SUMMARY,
   TEAM_INVITE_MESSAGE_KEYS
 } from "@/constants";
-import TeamMemberDetailPopup from "@/pages/team-detail/components/team-member-detail-popup/index.vue";
-import TeamMemberList from "@/pages/team-detail/components/team-member-list/index.vue";
-import TeamOverviewCard from "@/pages/team-detail/components/team-overview-card/index.vue";
 import TeamPassCode from "@/pages/team-info/components/team-pass-code/index.vue";
-import { walkClientService } from "@/utils";
+import { confirmAction, getErrorMessage, pickRandom, walkClientService } from "@/utils";
 
 import styles from "./index.module.scss";
 
@@ -133,7 +129,7 @@ const TEAM_SUBMIT_MIN_SIZE = 4;
 const router = useRouter();
 const { t } = useI18n();
 const queryClient = useQueryClient();
-const { clientUserInfo, updateUserInfo } = useClientUserData();
+const { clientUserInfo, refreshUserInfo } = useClientUserData();
 
 const selectedMemberId = ref<number>();
 const isMemberDetailPopupOpened = ref(false);
@@ -173,19 +169,7 @@ const {
   }
 });
 
-const sortedMembers = computed(() => {
-  const members = teamOverview.value?.members ?? [];
-
-  return members
-    .map((member, index) => ({ member, index }))
-    .toSorted((left, right) => {
-      if (left.member.role === right.member.role) return left.index - right.index;
-      if (left.member.role === "captain") return -1;
-      if (right.member.role === "captain") return 1;
-      return left.index - right.index;
-    })
-    .map(({ member }) => member);
-});
+const sortedMembers = computed(() => sortMembersByCaptain(teamOverview.value?.members ?? []));
 
 const selectedMemberSummary = computed(() =>
   sortedMembers.value.find((member) => member.id === selectedMemberId.value)
@@ -207,17 +191,8 @@ const refreshTeamData = async () => {
   ]);
 };
 
-const refreshClientUserData = async () => {
-  const userInfo = await queryClient.fetchQuery({
-    queryKey: [CLIENT_QUERY_KEY.USER.SELF],
-    queryFn: () => walkClientService.QueryUserInfo()
-  });
-
-  updateUserInfo(userInfo);
-};
-
 const getSubmitErrorMessage = (error: Error) => {
-  if (!(error instanceof RequestError)) return error.message || t("提交失败，请稍后重试");
+  if (!(error instanceof RequestError)) return getErrorMessage(error, t("提交失败，请稍后重试"));
 
   switch (error.code) {
     case RESP_CODE.TEAM_NOT_ENOUGH:
@@ -227,7 +202,7 @@ const getSubmitErrorMessage = (error: Error) => {
     case RESP_CODE.USER_NO_QUOTA:
       return t("当天名额已满");
     default:
-      return error.message || t("提交失败，请稍后重试");
+      return getErrorMessage(error, t("提交失败，请稍后重试"));
   }
 };
 
@@ -252,35 +227,35 @@ const { mutateAsync: mutateUndoTeamSubmission, isPending: isUndoTeamSubmissionPe
   useMutation({
     mutationFn: () => walkClientService.UndoTeamSubmission(),
     onError: (error) => {
-      showErrorToast(error.message || t("取消提交失败，请稍后重试"));
+      showErrorToast(getErrorMessage(error, t("取消提交失败，请稍后重试")));
     }
   });
 
 const { mutateAsync: mutateDisbandTeam, isPending: isDisbandTeamPending } = useMutation({
   mutationFn: () => walkClientService.DisbandTeam(),
   onError: (error) => {
-    showErrorToast(error.message || t("解散失败，请稍后重试"));
+    showErrorToast(getErrorMessage(error, t("解散失败，请稍后重试")));
   }
 });
 
 const { mutateAsync: mutateLeaveTeam, isPending: isLeaveTeamPending } = useMutation({
   mutationFn: () => walkClientService.LeaveTeam(),
   onError: (error) => {
-    showErrorToast(error.message || t("退出失败，请稍后重试"));
+    showErrorToast(getErrorMessage(error, t("退出失败，请稍后重试")));
   }
 });
 
 const { mutateAsync: mutateRemoveMember, isPending: isRemoveMemberPending } = useMutation({
   mutationFn: (memberId: number) => walkClientService.RemoveTeamMember({ id: memberId }),
   onError: (error) => {
-    showErrorToast(error.message || t("移出失败，请稍后重试"));
+    showErrorToast(getErrorMessage(error, t("移出失败，请稍后重试")));
   }
 });
 
 const { mutateAsync: mutateTransferCaptain, isPending: isTransferCaptainPending } = useMutation({
   mutationFn: (memberId: number) => walkClientService.UpdateTeamCaptain({ id: memberId }),
   onError: (error) => {
-    showErrorToast(error.message || t("移交失败，请稍后重试"));
+    showErrorToast(getErrorMessage(error, t("移交失败，请稍后重试")));
   }
 });
 
@@ -314,60 +289,35 @@ const handleMemberPopupClose = () => {
 
 // MARK: 移出团队
 const handleRemoveMemberClick = (memberId: number) => {
-  void showConfirmDialog({
+  void confirmAction({
     title: t("移出团队"),
     message: t("确认将该队员移出团队吗？"),
-    theme: "round-button",
-    beforeClose: async (action) => {
-      if (action !== "confirm") return true;
-
-      try {
-        await mutateRemoveMember(memberId);
-        return true;
-      } catch {
-        return false;
-      }
-    }
-  })
-    .then(async () => {
+    action: () => mutateRemoveMember(memberId),
+    onSuccess: async () => {
       handleMemberPopupClose();
       showSuccessToast({ message: t("移出成功") });
       await refreshTeamData();
-    })
-    .catch(() => undefined);
+    }
+  });
 };
 
 // MARK: 移交队长
 const handleTransferCaptainClick = (memberId: number) => {
-  void showConfirmDialog({
+  void confirmAction({
     title: t("移交队长"),
     message: t("确认将队长移交给该队员吗？移交后你将变为队员。"),
-    theme: "round-button",
-    beforeClose: async (action) => {
-      if (action !== "confirm") return true;
-
-      try {
-        await mutateTransferCaptain(memberId);
-        return true;
-      } catch {
-        return false;
-      }
-    }
-  })
-    .then(async () => {
+    action: () => mutateTransferCaptain(memberId),
+    onSuccess: async () => {
       handleMemberPopupClose();
       showSuccessToast({ message: t("移交成功") });
-      await Promise.all([refreshTeamData(), refreshClientUserData()]);
-    })
-    .catch(() => undefined);
+      await Promise.all([refreshTeamData(), refreshUserInfo()]);
+    }
+  });
 };
 
 // MARK: 分享
 const isShareSheetShow = ref(false);
 const isQrPopupShow = ref(false);
-
-const pickRandom = <T,>(l: readonly [T, ...T[]]): T =>
-  l[Math.floor(Math.random() * l.length)] ?? l[0];
 
 const shareData = computed(() => {
   let url = "";
@@ -402,6 +352,24 @@ const share = useShare(
   }))
 );
 
+const { start: startQqShareTimer, stop: stopQqShareTimer } = useTimeoutFn(
+  () => {
+    const fallbackUrl = new URL("https://connect.qq.com/widget/shareqq/");
+    fallbackUrl.searchParams.set("url", shareData.value.url);
+    fallbackUrl.searchParams.set("title", shareData.value.title);
+    fallbackUrl.searchParams.set("summary", shareData.value.text);
+    fallbackUrl.searchParams.set("pics", shareData.value.image);
+    fallbackUrl.searchParams.set("desc", shareData.value.desc);
+    window.open(fallbackUrl.toString());
+  },
+  1500,
+  { immediate: false }
+);
+
+useEventListener(document, "visibilitychange", () => {
+  if (document.hidden) stopQqShareTimer();
+});
+
 const shareOptions = computed<ShareSheetOption[][]>(() => [
   [
     { name: t("QQ"), icon: "qq" },
@@ -429,26 +397,15 @@ const handleShareOperation = async (option: ShareSheetOption) => {
             `&url=${encodeURIComponent(shareData.value.url)}` +
             `&image_url=${encodeURIComponent(shareData.value.image)}`;
 
-          const { stop } = useTimeoutFn(() => {
-            const fallbackUrl = new URL("https://connect.qq.com/widget/shareqq/");
-            fallbackUrl.searchParams.set("url", shareData.value.url);
-            fallbackUrl.searchParams.set("title", shareData.value.title);
-            fallbackUrl.searchParams.set("summary", shareData.value.text);
-            fallbackUrl.searchParams.set("pics", shareData.value.image);
-            fallbackUrl.searchParams.set("desc", shareData.value.desc);
-            window.open(fallbackUrl.toString());
-          }, 1500);
-          useEventListener(document, "visibilitychange", () => {
-            if (document.hidden) stop();
-          });
+          startQqShareTimer();
           window.location.href = mqqUrl;
         }
         break;
       case "star-o":
         {
-          // QQ空间: http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=链接&title=标题&desc=描述&summary=摘要&site=来源&pics=图片
+          // QQ空间: https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=链接&title=标题&desc=描述&summary=摘要&site=来源&pics=图片
           const qzoneShareUrl = new URL(
-            "http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey"
+            "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey"
           );
           qzoneShareUrl.searchParams.set("url", shareData.value.url);
           qzoneShareUrl.searchParams.set("title", shareData.value.title);
@@ -494,52 +451,30 @@ const handleShareOperation = async (option: ShareSheetOption) => {
 
 // MARK: 解散
 const handleDisbandClick = () => {
-  void showConfirmDialog({
+  void confirmAction({
     title: t("解散队伍"),
     message: t("确认解散当前队伍吗？解散后所有队员都需要重新加入队伍。"),
-    theme: "round-button",
-    beforeClose: async (action) => {
-      if (action !== "confirm") return true;
-
-      try {
-        await mutateDisbandTeam();
-        return true;
-      } catch {
-        return false;
-      }
-    }
-  })
-    .then(async () => {
+    action: () => mutateDisbandTeam(),
+    onSuccess: async () => {
       showSuccessToast({ message: t("解散成功") });
-      await refreshClientUserData();
+      await refreshUserInfo();
       await router.replace({ name: "team-info" });
-    })
-    .catch(() => undefined);
+    }
+  });
 };
 
 // MARK: 退出
 const handleLeaveTeamClick = () => {
-  void showConfirmDialog({
+  void confirmAction({
     title: t("退出队伍"),
     message: t("确认退出当前队伍吗？退出后需要重新加入队伍。"),
-    theme: "round-button",
-    beforeClose: async (action) => {
-      if (action !== "confirm") return true;
-
-      try {
-        await mutateLeaveTeam();
-        return true;
-      } catch {
-        return false;
-      }
-    }
-  })
-    .then(async () => {
+    action: () => mutateLeaveTeam(),
+    onSuccess: async () => {
       showSuccessToast({ message: t("退出成功") });
-      await refreshClientUserData();
+      await refreshUserInfo();
       await router.replace({ name: "team-info" });
-    })
-    .catch(() => undefined);
+    }
+  });
 };
 
 // MARK: 提交
@@ -550,26 +485,15 @@ const handleSubmissionClick = () => {
   }
 
   if (teamDetail.value.submitted) {
-    void showConfirmDialog({
+    void confirmAction({
       title: t("取消提交"),
       message: t("确认取消当前队伍提交状态吗？"),
-      theme: "round-button",
-      beforeClose: async (action) => {
-        if (action !== "confirm") return true;
-
-        try {
-          await mutateUndoTeamSubmission();
-          return true;
-        } catch {
-          return false;
-        }
-      }
-    })
-      .then(async () => {
+      action: () => mutateUndoTeamSubmission(),
+      onSuccess: async () => {
         showSuccessToast({ message: t("取消提交成功") });
         await refreshTeamData();
-      })
-      .catch(() => undefined);
+      }
+    });
     return;
   }
 

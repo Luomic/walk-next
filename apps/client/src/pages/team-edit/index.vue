@@ -1,44 +1,41 @@
 <template>
   <div :class="styles.page">
-    <loading-container :loading="isTeamDetailFetching" :text="t('refresh.loading')">
-      <error-empty
-        :error="teamDetail ? undefined : error"
-        :disabled="isTeamDetailFetching || Boolean(teamDetail)"
-        :btn-text="t('重试')"
-        @btn-click="refetch"
-      >
-        <van-empty
-          v-if="!teamDetail && !isTeamDetailFetching"
-          :description="t('暂无团队详细信息')"
+    <query-state-container
+      :error="error"
+      :loading="isTeamDetailFetching"
+      :data="teamDetail"
+      :btn-text="t('重试')"
+      :loading-text="t('refresh.loading')"
+      :empty-description="t('暂无团队详细信息')"
+      @retry="refetch"
+    >
+      <div v-if="teamDetail" :class="styles.content">
+        <team-form
+          :initial-value="initialFormValue"
+          :loading="isUpdateTeamInfoPending"
+          :submitted="teamDetail.submitted"
+          submit-label="更新信息"
+          @submit="handleFormSubmit"
         />
-
-        <div v-else-if="teamDetail" :class="styles.content">
-          <team-edit-form
-            :initial-value="initialFormValue"
-            :loading="isUpdateTeamInfoPending"
-            :submitted="teamDetail.submitted"
-            @submit="handleFormSubmit"
-          />
-        </div>
-      </error-empty>
-    </loading-container>
+      </div>
+    </query-state-container>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { ErrorEmpty, LoadingContainer } from "shared";
+import { QueryStateContainer } from "shared";
 import { showFailToast, showSuccessToast } from "vant";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import TeamForm from "@/components/team-form/index.vue";
+import type { TeamFormValue } from "@/components/team-form/types";
 import { CLIENT_QUERY_KEY } from "@/constants";
-import { walkClientService } from "@/utils";
+import { getErrorMessage, walkClientService } from "@/utils";
 
-import TeamEditForm from "./components/team-edit-form/index.vue";
 import styles from "./index.module.scss";
-import type { TeamEditFormValue } from "./types";
 import { buildInitialFormValue } from "./utils";
 
 const router = useRouter();
@@ -58,7 +55,7 @@ const {
 const initialFormValue = computed(() => buildInitialFormValue(teamDetail.value));
 
 const { mutate: mutateUpdateTeamInfo, isPending: isUpdateTeamInfoPending } = useMutation({
-  mutationFn: (value: TeamEditFormValue) =>
+  mutationFn: (value: TeamFormValue) =>
     walkClientService.UpdateTeamInfo({
       name: value.name,
       slogan: value.slogan,
@@ -81,11 +78,11 @@ const { mutate: mutateUpdateTeamInfo, isPending: isUpdateTeamInfoPending } = use
     router.replace({ name: "team-detail" });
   },
   onError: (updateError) => {
-    showFailToast({ message: updateError.message || t("更新失败，请稍后重试") });
+    showFailToast({ message: getErrorMessage(updateError, t("更新失败，请稍后重试")) });
   }
 });
 
-function handleFormSubmit(value: TeamEditFormValue) {
+function handleFormSubmit(value: TeamFormValue) {
   if (isUpdateTeamInfoPending.value) return;
   mutateUpdateTeamInfo(value);
 }
