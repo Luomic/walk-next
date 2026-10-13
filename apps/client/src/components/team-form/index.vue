@@ -139,8 +139,8 @@ const {
 
 // #region 选项与表单状态
 const MATCH_OPTIONS = [
-  { label: "不随机", value: "false" },
-  { label: "随机匹配", value: "true" }
+  { label: "不随机", value: "false", subname: "" },
+  { label: "随机匹配", value: "true", subname: "随机队友无需密码即可加入" }
 ] as const;
 
 const formRef = useTemplateRef<FormInstance>("formRef");
@@ -189,6 +189,7 @@ const selectedRouteLabel = computed(() => {
 const matchActions = computed<ActionSheetAction[]>(() =>
   MATCH_OPTIONS.map((option) => ({
     name: t(option.label),
+    subname: option.subname ? t(option.subname) : undefined,
     color: option.value === formValue.allowMatch ? "#734a23" : undefined
   }))
 );
