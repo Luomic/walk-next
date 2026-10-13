@@ -10,19 +10,15 @@
       :btn-text="$t('重试')"
       @btn-click="refetchPhase"
     >
-      <loading-container
-        :class="styles.loading"
-        :loading="isPhaseLoading"
-        :text="$t('refresh.loading')"
-      >
-        <div v-if="!isPhaseLoading" :class="styles.header">
+      <van-skeleton :class="styles.skeleton" :loading="isPhaseLoading" avatar title :row="1">
+        <div :class="styles.header">
           <van-icon :name="currentStage.icon" :class="styles.icon" />
           <div>
             <p :class="styles.title">{{ $t(currentStage.title) }}</p>
             <p :class="styles.description">{{ $t(currentStage.description) }}</p>
           </div>
         </div>
-      </loading-container>
+      </van-skeleton>
 
       <van-steps :class="styles.stages" :active="currentStageIndex">
         <van-step v-for="stage in WALK_STAGES" :key="stage.title">
@@ -34,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ErrorEmpty, LoadingContainer } from "shared";
+import { ErrorEmpty } from "shared";
 
 import { useWalkPhaseConfig } from "@/composables";
 import { WALK_STAGES } from "@/constants/walk-progress";

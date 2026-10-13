@@ -8,15 +8,22 @@
   padding: 16px;
 }
 
-// 撑满卡片内容区，使加载遮罩覆盖整个卡片
-.loading {
-  height: 100%;
+.skeleton {
+  --van-padding-md: 0;
+  --van-padding-xs: 0;
+  --van-skeleton-avatar-size: 42px;
+  --van-skeleton-avatar-background: rgba(190, 143, 88, 0.12);
+  --van-skeleton-paragraph-height: 19px;
+  --van-skeleton-paragraph-background: rgba(138, 148, 166, 0.18);
 
-  :global(.loading-container__overlay) {
-    background: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    opacity: 1;
+  gap: 12px;
+
+  :global(.van-skeleton-title) {
+    height: 24px;
+  }
+
+  :global(.van-skeleton-title + .van-skeleton-paragraph) {
+    margin-top: 4px;
   }
 }
 
