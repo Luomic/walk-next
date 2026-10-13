@@ -11,6 +11,13 @@
 // 撑满卡片内容区，使加载遮罩覆盖整个卡片
 .loading {
   height: 100%;
+
+  :global(.loading-container__overlay) {
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    opacity: 1;
+  }
 }
 
 // 错误态内容高于固定高度，放开以容纳空态

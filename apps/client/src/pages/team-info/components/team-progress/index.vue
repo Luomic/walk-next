@@ -15,7 +15,7 @@
         :loading="isPhaseLoading"
         :text="$t('refresh.loading')"
       >
-        <div :class="styles.header">
+        <div v-if="!isPhaseLoading" :class="styles.header">
           <van-icon :name="currentStage.icon" :class="styles.icon" />
           <div>
             <p :class="styles.title">{{ $t(currentStage.title) }}</p>
