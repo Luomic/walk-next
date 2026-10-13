@@ -37,6 +37,11 @@
           autocomplete="off"
         />
 
+        <!-- 创建时是设定密码，只有编辑已有队伍才需要提示改密码的后果 -->
+        <p v-if="props.initialValue" :class="styles.fieldNotice">
+          {{ t("修改密码后，已生成的邀请链接和二维码会失效，已加入的队员不受影响") }}
+        </p>
+
         <van-field
           :model-value="selectedMatchLabel"
           :error-message="selectErrors.allowMatch"

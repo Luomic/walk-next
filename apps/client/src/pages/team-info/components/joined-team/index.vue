@@ -89,7 +89,11 @@
       :title="t('分享队伍')"
       :options="shareOptions"
       @select="handleShareOperation"
-    />
+    >
+      <template #description>
+        {{ t("邀请链接与二维码会在修改密码后失效，已加入的队员不受影响") }}
+      </template>
+    </van-share-sheet>
 
     <van-popup v-model:show="isQrPopupShow" round :class="styles.qrPopup">
       <qr-code :value="shareData.url" :class="styles.qrCode" />
