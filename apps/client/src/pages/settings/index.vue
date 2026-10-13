@@ -1,7 +1,11 @@
 <template>
   <div :class="styles.page">
     <van-cell-group inset>
-      <van-image :class="styles.decorationImg" :src="decorationImgUrl">
+      <van-image
+        :class="[styles.decorationImg, isBannerLoaded && styles.decorationImgLoaded]"
+        :src="decorationImgUrl"
+        @load="isBannerLoaded = true"
+      >
         <template #loading>
           <img :class="styles.loadingLogo" :src="jhLogo" alt="" />
         </template>
@@ -62,6 +66,8 @@ const agreementStore = useAgreementStore();
 
 /** 语言选择弹层是否可见 */
 const isLanguageActionSheetVisible = ref(false);
+/** banner 是否已加载完成，用于加载后淡入 banner */
+const isBannerLoaded = ref(false);
 /** 点击切换语言 */
 const handleLanguageClick = () => {
   isLanguageActionSheetVisible.value = true;
