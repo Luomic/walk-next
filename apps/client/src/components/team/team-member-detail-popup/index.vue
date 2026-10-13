@@ -7,6 +7,7 @@
     :class="styles.popup"
     @click-close-icon="handleCloseClick"
     @click-overlay="handleCloseClick"
+    @after-close="emit('afterClose')"
   >
     <section :class="styles.content">
       <h2 :class="styles.title">
@@ -14,7 +15,7 @@
         {{ t("队员信息") }}
       </h2>
 
-      <error-empty :error="props.error" :disabled="props.loading" @btn-click="handleRetryClick">
+      <error-empty :error="props.error" :disabled="props.loading" @btn-click="emit('retry')">
         <loading-container
           :class="styles.loadingContainer"
           :loading="props.loading"
@@ -82,6 +83,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   close: [];
+  /** 关闭动画结束，此时清空数据不会再被看到 */
+  afterClose: [];
   retry: [];
   remove: [memberId: number];
   transfer: [memberId: number];
@@ -105,10 +108,6 @@ const walkStatusLabel = computed(() =>
 
 const handleCloseClick = () => {
   emit("close");
-};
-
-const handleRetryClick = () => {
-  emit("retry");
 };
 
 const handleRemoveClick = () => {

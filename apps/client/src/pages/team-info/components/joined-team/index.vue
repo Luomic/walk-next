@@ -78,6 +78,7 @@
       :can-manage-member="canManageSelectedMember"
       :action-loading="isMemberActionPending"
       @close="handleMemberPopupClose"
+      @after-close="selectedMemberId = undefined"
       @retry="handleSelectedMemberRetry"
       @remove="handleRemoveMemberClick"
       @transfer="handleTransferCaptainClick"
@@ -131,6 +132,7 @@ const { t } = useI18n();
 const queryClient = useQueryClient();
 const { clientUserInfo, refreshUserInfo } = useClientUserData();
 
+/** 提前清空会让弹层在关闭动画途中闪出空态，只在 after-close 后置空 */
 const selectedMemberId = ref<number>();
 const isMemberDetailPopupOpened = ref(false);
 
@@ -285,7 +287,6 @@ const handleMemberClick = (memberId: number) => {
 
 const handleMemberPopupClose = () => {
   isMemberDetailPopupOpened.value = false;
-  selectedMemberId.value = undefined;
 };
 
 const handleRemoveMemberClick = (memberId: number) => {
