@@ -4,10 +4,10 @@ import type { FieldRule } from "vant";
 
 import { isValidIdentity } from "@/utils/validation";
 
-/** 校验电话号码正则 */
+/** 大陆手机号 */
 export const TEL_PATTERN = /^1[3-9]\d{9}$/;
 
-/** 校验电话号码规则 */
+/** 电话号码校验规则：必填且须匹配大陆手机号 */
 export const getTelRules = (t: (key: string) => string): FieldRule[] => [
   ...createRequiredRuleWithMessage(t("请输入电话号码")),
   { pattern: TEL_PATTERN, message: t("请输入正确的电话号码") }

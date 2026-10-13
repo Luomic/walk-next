@@ -1,6 +1,5 @@
 <template>
   <div :class="styles.layout">
-    <!-- #region 背景装饰图 -->
     <img
       :src="bgTop"
       alt=""
@@ -19,12 +18,9 @@
         props.bgDecorationVariant === 'default' ? styles.topOnly : ''
       ]"
     />
-    <!-- #endregion -->
 
-    <!-- 顶部Logo -->
     <img v-if="props.showLogo" :src="logo" alt="Logo" :class="styles.topLogo" />
 
-    <!-- 导航栏 -->
     <van-nav-bar
       v-if="props.showNavbar && pageTitle"
       :title="pageTitle"
@@ -71,6 +67,5 @@ const route = useRoute();
 const { isNavigationPending } = useRouterState();
 const handleBack = useBackHandler();
 
-/** 页面标题 */
 const pageTitle = computed(() => route.meta.pageName);
 </script>

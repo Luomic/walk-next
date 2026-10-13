@@ -14,18 +14,16 @@ import { scrollToHash } from "@/utils/scroll-to-hash";
 
 import routes from "./routes";
 
-// #region 路由实例与守卫
 export const routerInstance = createRouter({
   history: createWebHistory(import.meta.env.VITE_BASE_PATH),
   routes
 });
 
-// 前置路由守卫
 routerInstance.beforeEach((to) => {
   const { clientUserInfo, isLoggedIn } = useClientUserData(globalQueryClient);
   const { incPendingNavigationCount, decPendingNavigationCount } = useRouterState();
 
-  // 进入守卫即计数；守卫内重定向（NAVIGATION_GUARD_REDIRECT）不会触发 afterEach，需自行归还计数
+  // 守卫内重定向（NAVIGATION_GUARD_REDIRECT）不触发 afterEach，计数只能由 redirect 自行归还
   incPendingNavigationCount();
 
   const redirect = (location: RouteLocationRaw) => {
@@ -33,7 +31,6 @@ routerInstance.beforeEach((to) => {
     return location;
   };
 
-  // 拦截无效路由
   if (to.matched.length === 0) {
     return redirect(isLoggedIn.value ? { name: "team-info" } : { name: "login" });
   }
@@ -43,7 +40,6 @@ routerInstance.beforeEach((to) => {
     return redirect({ name: "login", query: { fromPath: encodeURIComponent(to.fullPath) } });
   }
 
-  // 已登录访问仅未登录用户可访问的页面
   if (isLoggedIn.value && to.meta.guestOnly) return redirect({ name: "team-info" });
 
   if (to.meta.allowedRoles) {
@@ -56,28 +52,22 @@ routerInstance.beforeEach((to) => {
   }
 });
 
-// 后置路由守卫
 routerInstance.afterEach((to, _from, failure) => {
   const { decPendingNavigationCount } = useRouterState();
 
-  /**
-   * Vue Router 5.x中，duplicated会跳过navigate，也就不会执行beforeEach，需要过滤，以免计数器泄露
-   *  @see https://github.com/vuejs/router/blob/main/packages/router/src/router.ts */
+  // duplicated 导航会跳过 beforeEach 就直接结束，计数只在非 duplicated 时归还，否则会泄漏
+  // @see https://github.com/vuejs/router/blob/main/packages/router/src/router.ts
   if (!isNavigationFailure(failure, NavigationFailureType.duplicated)) {
-    // 更新全局路由状态
     decPendingNavigationCount();
   }
 
-  // hash 定位：等待异步内容渲染后滚动到目标元素
+  // hash 目标元素可能由异步数据渲染，需等渲染完成后再滚动
   if (!failure && to.hash) scrollToHash(to.hash);
   else if (!failure) document.querySelector("main")?.scrollTo({ top: 0 });
 });
 
-// 路由内部逻辑错误处理
 routerInstance.onError((error) => {
   console.error(error);
-  // 重置全局路由状态
   const { resetPendingNavigationCount } = useRouterState();
   resetPendingNavigationCount();
 });
-// #endregion

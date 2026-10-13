@@ -1,4 +1,3 @@
-// import messages from "@intlify/unplugin-vue-i18n/messages"; // 全量词条
 import { storeToRefs } from "pinia";
 import { Locale } from "vant";
 import { computed, nextTick, type WritableComputedRef } from "vue";
@@ -7,6 +6,7 @@ import { type Composer, createI18n, type I18n, type I18nOptions, useI18n } from 
 import { LANG_MAP, LANG_META, VALID_LANG, type ValidLanguage } from "@/constants";
 import { useLocaleStore } from "@/store/locale";
 
+/** 装载并注册对应语言的 Vant 内置文案 */
 const useVantLocale = async (lang: ValidLanguage): Promise<void> => {
   const VANT_MESSAGES = {
     "zh-Hans": () => Promise.resolve({ default: undefined }),
@@ -17,6 +17,7 @@ const useVantLocale = async (lang: ValidLanguage): Promise<void> => {
   Locale.use(LANG_META[lang].vant, messages);
 };
 
+/** 解析初始语言：持久化偏好优先，其次按浏览器语言列表匹配受支持语言，兜底英文 */
 const getInitLocale = (): string => {
   const { locale } = storeToRefs(useLocaleStore());
   if (locale.value) return locale.value;
@@ -32,12 +33,14 @@ const getInitLocale = (): string => {
   return "en";
 };
 
+/** 按需异步加载某语言的词条并注入 i18n */
 const loadLocaleMessages = async (i18n: Composer, locale: ValidLanguage): Promise<void> => {
   const messages = await import(`../locales/${locale}.yaml`);
   i18n.setLocaleMessage(locale, messages.default);
   return nextTick();
 };
 
+/** 创建 i18n 实例：装载初始语言词条与 Vant 文案，并同步 html 的 lang 属性 */
 export const initI18n = async (): Promise<I18n> => {
   const locale = getInitLocale();
   const lang: ValidLanguage = VALID_LANG.find((prefix) => locale.startsWith(prefix)) ?? "en";
@@ -47,7 +50,6 @@ export const initI18n = async (): Promise<I18n> => {
     fallbackLocale: "zh-Hans",
     availableLocales: [...VALID_LANG],
     globalInjection: true,
-    // messages
     messages: { [locale]: messages.default }
   } satisfies I18nOptions);
   await useVantLocale(lang);
@@ -55,6 +57,7 @@ export const initI18n = async (): Promise<I18n> => {
   return i18n;
 };
 
+/** 当前语言的读写入口，写入即切换 i18n、Vant 文案、持久化偏好与 html 的 lang */
 export const useUserLocale = (): {
   locale: WritableComputedRef<ValidLanguage | undefined>;
 } => {

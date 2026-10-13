@@ -19,7 +19,6 @@ const globalQueryClientConfig: QueryClientConfig = {
         if (isAuthExpiredError(error)) return false;
         return failureCount < MAX_QUERY_RETRY_COUNT;
       },
-      // 缓存生效时间
       staleTime: 0 * ONE_SECOND
     }
   }

@@ -3,15 +3,15 @@ export interface DefaultLayoutProps {
    * @default true
    */
   showNavbar?: boolean;
-  /** 是否显示logo
+  /** 是否显示顶部 Logo
    * @default false
    */
   showLogo?: boolean;
-  /** main区域是否不添加内边距
+  /** main 区域是否不设内边距
    * @default false
    */
   noPadding?: boolean;
-  /** 背景装饰图变体
+  /** 背景装饰图变体：default 仅顶部，topAndBottom 顶部与底部都显示
    * @default "default"
    */
   bgDecorationVariant?: "default" | "topAndBottom";

@@ -64,16 +64,14 @@ const { t } = useI18n();
 const { resetClientUserData } = useClientUserData();
 const agreementStore = useAgreementStore();
 
-/** 语言选择弹层是否可见 */
 const isLanguageActionSheetVisible = ref(false);
-/** banner 是否已加载完成，用于加载后淡入 banner */
+/** banner 加载完成后据此淡入 */
 const isBannerLoaded = ref(false);
-/** 点击切换语言 */
+
 const handleLanguageClick = () => {
   isLanguageActionSheetVisible.value = true;
 };
 
-/** 点击退出登录 */
 const handleLogoutClick = () => {
   void showConfirmDialog({
     title: t("您是否确认退出？"),

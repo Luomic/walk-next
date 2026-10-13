@@ -15,7 +15,7 @@ import styles from "./index.module.scss";
 
 const isIframeLoading = ref(true);
 
-/** iframe 加载完成 */
+/** iframe 加载完成后收起页面遮罩 */
 const handleIframeLoad = () => {
   isIframeLoading.value = false;
 };

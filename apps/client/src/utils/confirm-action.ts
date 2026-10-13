@@ -7,10 +7,7 @@ export interface ConfirmActionOptions {
   onSuccess: () => Promise<unknown> | unknown;
 }
 
-/**
- * 显示确认对话框，确认后执行 action，成功后执行 onSuccess
- * 用户取消时静默处理
- */
+/** 确认后执行 action，成功后执行 onSuccess；用户取消则静默结束 */
 export const confirmAction = (options: ConfirmActionOptions) =>
   showConfirmDialog({
     title: options.title,

@@ -38,13 +38,12 @@ export const CLIENT_USER_INFO_QUERY_OPTIONS = queryOptions({
   staleTime: Infinity
 });
 
-/**
- * 客户端用户数据
- */
+/** 当前登录用户数据（JWT 与用户信息）的读写入口 */
 export const useClientUserData = (queryClient: QueryClient = useQueryClient()) => {
   const userDataStore = useClientUserDataStore();
   const { isLoggedIn, jwt, userInfo: clientUserInfo } = storeToRefs(userDataStore);
 
+  /** 将 store 内的用户信息回写进 query 缓存，保持两处一致 */
   const syncQueryData = () => {
     queryClient.setQueryData<QueryUserInfoResponse>(
       [CLIENT_QUERY_KEY.USER.SELF],
@@ -52,6 +51,7 @@ export const useClientUserData = (queryClient: QueryClient = useQueryClient()) =
     );
   };
 
+  /** 更新用户信息并回写 query 缓存 */
   const updateUserInfo = (data: QueryUserInfoResponse) => {
     userDataStore.userInfo = data;
     syncQueryData();

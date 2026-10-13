@@ -8,7 +8,6 @@
   backdrop-filter: blur(4px);
 }
 
-/// 页面基础布局
 @mixin page-container {
   position: relative;
   box-sizing: border-box;
@@ -18,7 +17,6 @@
   overflow-x: hidden;
 }
 
-/// 页面大标题
 @mixin page-title {
   font-size: 38px;
   font-weight: 800;
@@ -27,7 +25,6 @@
   letter-spacing: 2px;
 }
 
-/// 底部引导链接
 @mixin guide-link {
   margin-top: 16px;
   font-size: 14px;
@@ -42,7 +39,6 @@
   }
 }
 
-/// 表单容器
 @mixin form-container {
   display: flex;
   flex-direction: column;
@@ -50,14 +46,12 @@
   width: 100%;
 }
 
-/// 字段分组
 @mixin field-group {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-/// 字段标签
 @mixin field-label {
   font-size: 16px;
   font-weight: 600;
@@ -103,7 +97,6 @@
   }
 }
 
-/// 按钮样式
 @mixin custom-button {
   --van-button-primary-background: #734a23;
   --van-button-primary-border-color: #be8f58;
@@ -152,7 +145,6 @@
   border: 0;
 }
 
-/// ActionSheet 选项图标对齐
 /// 当同一 action sheet 中部分选项有图标、部分无图标时，使用此 mixin 对齐文字
 @mixin action-sheet-align {
   :global(.van-action-sheet__item:has(.van-action-sheet__item-icon))::after {
@@ -181,14 +173,12 @@
   --van-checkbox-label-color: #666;
 }
 
-/// 提交按钮区域居中
 @mixin submit-area {
   display: flex;
   justify-content: center;
   margin-top: 8px;
 }
 
-/// 装饰图片通用样式
 /// fixed 定位锚定视口（与背景图一致），不随页面滚动
 @mixin illustration-image(
   $top: null,

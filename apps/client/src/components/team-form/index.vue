@@ -117,7 +117,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-// 查询路线是否有名额（仅编辑模式且已提交时启用）
+/** 路线名额查询：不自动发起，打开路线选择时（编辑模式且已提交）手动 refetch */
 const {
   data: quotaData,
   isFetching: isQuotaFetching,

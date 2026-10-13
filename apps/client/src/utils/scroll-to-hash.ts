@@ -2,16 +2,15 @@
 let pending: MutationObserver | undefined;
 
 /**
- * 滚动到 hash 对应的目标元素
- *
- * 目标内容可能异步渲染（如 locale MDX 分包），元素不存在时监听 DOM 变化，出现后立即滚动
+ * 滚动到 hash 对应的目标元素。
+ * 目标可能由异步内容渲染（如 locale MDX 分包），此时监听 DOM 变化，待元素出现后再滚动。
  */
 export function scrollToHash(hash: string, options?: ScrollIntoViewOptions): void {
   let id = hash.slice(1);
   try {
     id = decodeURIComponent(id);
   } catch {
-    // 保留原值
+    // 解码失败则按原始 id 查找
   }
 
   pending?.disconnect();

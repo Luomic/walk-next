@@ -138,7 +138,8 @@ const isCaptain = computed(() => clientUserInfo.value?.role === "captain");
 
 const isMember = computed(() => clientUserInfo.value?.role === "member");
 
-const isLeaveTeamVisible = computed(() => isMember.value); // 暂时无条件展示 && teamDetail.value?.submitted === false
+/** 暂时无条件展示，原附加条件为 teamDetail.submitted === false */
+const isLeaveTeamVisible = computed(() => isMember.value);
 
 const {
   data: teamOverview,
@@ -287,7 +288,6 @@ const handleMemberPopupClose = () => {
   selectedMemberId.value = undefined;
 };
 
-// MARK: 移出团队
 const handleRemoveMemberClick = (memberId: number) => {
   void confirmAction({
     title: t("移出团队"),
@@ -301,7 +301,6 @@ const handleRemoveMemberClick = (memberId: number) => {
   });
 };
 
-// MARK: 移交队长
 const handleTransferCaptainClick = (memberId: number) => {
   void confirmAction({
     title: t("移交队长"),
@@ -315,7 +314,7 @@ const handleTransferCaptainClick = (memberId: number) => {
   });
 };
 
-// MARK: 分享
+// 分享所需的链接与图片数据
 const isShareSheetShow = ref(false);
 const isQrPopupShow = ref(false);
 
@@ -449,7 +448,6 @@ const handleShareOperation = async (option: ShareSheetOption) => {
   }
 };
 
-// MARK: 解散
 const handleDisbandClick = () => {
   void confirmAction({
     title: t("解散队伍"),
@@ -463,7 +461,6 @@ const handleDisbandClick = () => {
   });
 };
 
-// MARK: 退出
 const handleLeaveTeamClick = () => {
   void confirmAction({
     title: t("退出队伍"),
@@ -477,7 +474,6 @@ const handleLeaveTeamClick = () => {
   });
 };
 
-// MARK: 提交
 const handleSubmissionClick = () => {
   if (!teamDetail.value) {
     showErrorToast(t("团队详细信息加载中"));

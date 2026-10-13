@@ -1,4 +1,3 @@
-<!-- 语言选择弹层 -->
 <template>
   <van-action-sheet
     v-model:show="isActionSheetVisible"
@@ -19,10 +18,9 @@ import type { LanguageActionSheetAction } from "./types";
 
 const { locale } = useUserLocale();
 
-/** 语言选择弹层是否可见 */
 const isActionSheetVisible = defineModel<boolean>("visible", { required: true });
 
-/** 语言选择弹层的可用选项列表 */
+/** 全部受支持语言，当前语言置为禁选 */
 const actionSheetActions = computed(() =>
   VALID_LANG.map(
     (langCode): LanguageActionSheetAction => ({
@@ -33,7 +31,6 @@ const actionSheetActions = computed(() =>
   )
 );
 
-/** 选择语言 */
 const handleLanguageSelect = (action: LanguageActionSheetAction) => {
   locale.value = action.langCode;
 };

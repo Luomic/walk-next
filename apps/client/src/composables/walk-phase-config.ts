@@ -42,7 +42,6 @@ const syncFromPhases = (phases: PhaseTimeItem[]): SyncResult => {
     const startMs = Date.parse(p.start.replace(" ", "T"));
     const endMs = Date.parse(p.end.replace(" ", "T"));
 
-    // 跳过无效日期
     if (Number.isNaN(startMs) || Number.isNaN(endMs)) continue;
 
     if (startMs <= nowMs && nowMs <= endMs) {
@@ -78,7 +77,7 @@ const applyPhaseSync = (
   if (nextBoundary.value != null) startTimer();
 };
 
-/** 毅行阶段配置 */
+/** 毅行阶段配置：按后端时间区间定位当前阶段，并在阶段边界自动切换 */
 export const useWalkPhaseConfig = () => {
   const {
     data: phaseConfig,
@@ -92,7 +91,7 @@ export const useWalkPhaseConfig = () => {
   /** 下一阶段边界的时间戳（毫秒） */
   const nextBoundary = ref<number | null>(null);
 
-  // 阶段切换定时器，在下一边界到达时重新同步
+  // 阶段边界到达时重新同步，让阶段无需重新请求也能随时间自动切换
   const { start, stop } = useTimeoutFn(
     () => {
       const phases = phaseConfig.value?.phases;
