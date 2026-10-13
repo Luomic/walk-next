@@ -1,6 +1,10 @@
 <template>
   <loading-container :loading="props.submitted && isQuotaFetching" :text="t('refresh.loading')">
     <van-form ref="formRef" :disabled="props.loading" @submit="handleSubmit">
+      <p :class="styles.publicNotice">
+        {{ t("团队名称与口号将公开展示，请文明填写") }}
+      </p>
+
       <van-cell-group inset>
         <van-field
           v-model="formValue.name"
