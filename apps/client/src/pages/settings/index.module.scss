@@ -27,7 +27,9 @@
   }
 
   .agreementCell :global(.van-cell__value) {
+    flex: none;
     overflow: visible;
+    white-space: nowrap;
   }
 
   .buttonContainer {
