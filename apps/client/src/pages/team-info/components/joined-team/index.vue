@@ -316,7 +316,7 @@ const handleTransferCaptainClick = (memberId: number) => {
     onSuccess: async () => {
       handleMemberPopupClose();
       showSuccessToast({ message: t("移交成功") });
-      await Promise.all([refreshTeamData(), refreshUserInfo()]);
+      await refreshTeamData();
     }
   });
 };
