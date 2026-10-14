@@ -117,7 +117,7 @@ export interface UpdateUserInfoRequest {
 }
 
 /** 修改用户信息 响应 */
-export type UpdateUserInfoResponse = QueryUserInfoResponse;
+export type UpdateUserInfoResponse = null;
 
 /** 校友注册 请求 */
 export interface AlumRegisterRequest {
