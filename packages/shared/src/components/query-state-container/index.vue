@@ -31,7 +31,7 @@ const props = withDefaults(
     error?: Error | string | null;
     /** 是否正在加载 */
     loading: boolean;
-    /** 查询到的数据。传入后会自动在有数据时抑制错误态和加载遮罩，使 refetch 时数据保持可见、刷新无感 */
+    /** 查询到的数据。传入后会自动在有数据时抑制错误态和加载遮罩，使 refetch 时数据保持可见、刷新无感；空数组视为无数据 */
     data?: unknown;
     /** 重试按钮文本 */
     btnText?: string;
@@ -51,7 +51,10 @@ const props = withDefaults(
 
 const emit = defineEmits<{ retry: [] }>();
 
-const hasData = computed(() => Boolean(props.data));
+/** 空数组同样视为无数据，避免列表查询拿到空结果时被误判为有数据 */
+const hasData = computed(() =>
+  Array.isArray(props.data) ? props.data.length > 0 : Boolean(props.data)
+);
 
 /** 有数据时抑制错误展示 */
 const effectiveError = computed(() => (hasData.value ? undefined : props.error));

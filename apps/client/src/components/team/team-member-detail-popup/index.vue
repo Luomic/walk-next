@@ -15,25 +15,25 @@
         {{ t("队员信息") }}
       </h2>
 
-      <error-empty :error="props.error" :disabled="props.loading" @btn-click="emit('retry')">
-        <loading-container
-          :class="styles.loadingContainer"
-          :loading="props.loading"
-          :text="t('refresh.loading')"
-        >
-          <van-cell-group v-if="props.member && !props.loading" inset :class="styles.list">
-            <van-cell :title="t('姓名')" :value="props.member.name" />
-            <van-cell :title="t('人员性质')" :value="memberTypeLabel" />
-            <van-cell :title="t('队内身份')" :value="memberRoleLabel" />
-            <van-cell :title="t('电话')" :value="props.member.tel || t('未填写')" />
-            <van-cell :title="t('微信')" :value="props.member.wechat || t('未填写')" />
-            <van-cell :title="t('QQ')" :value="props.member.qq || t('未填写')" />
-            <van-cell :title="t('状态')" :value="walkStatusLabel" />
-          </van-cell-group>
-
-          <van-empty v-else-if="!props.loading" :description="t('暂无队员信息')" />
-        </loading-container>
-      </error-empty>
+      <query-state-container
+        :error="props.error"
+        :loading="props.loading"
+        :data="props.member"
+        :btn-text="t('重试')"
+        :loading-text="t('refresh.loading')"
+        :empty-description="t('暂无队员信息')"
+        @retry="emit('retry')"
+      >
+        <van-cell-group v-if="props.member" inset :class="styles.list">
+          <van-cell :title="t('姓名')" :value="props.member.name" />
+          <van-cell :title="t('人员性质')" :value="memberTypeLabel" />
+          <van-cell :title="t('队内身份')" :value="memberRoleLabel" />
+          <van-cell :title="t('电话')" :value="props.member.tel || t('未填写')" />
+          <van-cell :title="t('微信')" :value="props.member.wechat || t('未填写')" />
+          <van-cell :title="t('QQ')" :value="props.member.qq || t('未填写')" />
+          <van-cell :title="t('状态')" :value="walkStatusLabel" />
+        </van-cell-group>
+      </query-state-container>
 
       <div v-if="props.member && props.canManageMember" :class="styles.actionArea">
         <van-button
@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import type { QueryTeamMemberResponse, UserSummary } from "api/types/client";
-import { ErrorEmpty, LoadingContainer } from "shared";
+import { QueryStateContainer } from "shared";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 

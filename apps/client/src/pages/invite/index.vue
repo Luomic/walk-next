@@ -5,6 +5,7 @@
       :error="teamInfoError"
       :loading="isTeamInfoLoading"
       :data="teamInfo"
+      :btn-text="$t('重试')"
       :loading-text="$t('refresh.loading')"
       :empty-description="$t('邀请已失效')"
       @retry="refetchTeamInfo"

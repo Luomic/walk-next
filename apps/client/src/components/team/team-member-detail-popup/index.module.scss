@@ -22,7 +22,7 @@
     overflow: hidden;
   }
 
-  .loadingContainer {
+  :global(.query-state-container) {
     min-height: 168px;
   }
 
