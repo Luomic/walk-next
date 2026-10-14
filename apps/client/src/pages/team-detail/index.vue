@@ -28,7 +28,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
 import { getMemberTypeLabel, sortMembersByCaptain } from "@/components/team/utils";
-import { useClientUserData } from "@/composables";
+import { useClientUserData, useTeamRoleSync } from "@/composables";
 import { CLIENT_QUERY_KEY } from "@/constants";
 import { walkClientService } from "@/utils";
 
@@ -45,6 +45,8 @@ const { data: teamOverview, refetch: refetchOverview } = useQuery({
   queryKey: [CLIENT_QUERY_KEY.TEAM.OVERVIEW],
   queryFn: () => walkClientService.QueryTeamOverview()
 });
+
+useTeamRoleSync(teamOverview);
 
 const {
   data: teamDetail,

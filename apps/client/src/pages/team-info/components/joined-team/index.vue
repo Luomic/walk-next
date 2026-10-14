@@ -115,7 +115,7 @@ import TeamMemberDetailPopup from "@/components/team/team-member-detail-popup/in
 import TeamMemberList from "@/components/team/team-member-list/index.vue";
 import TeamOverviewCard from "@/components/team/team-overview-card/index.vue";
 import { sortMembersByCaptain } from "@/components/team/utils";
-import { useClientUserData } from "@/composables";
+import { useClientUserData, useTeamRoleSync } from "@/composables";
 import {
   CLIENT_QUERY_KEY,
   TEAM_INVITE_CARD_TITLE_KEY,
@@ -160,6 +160,8 @@ const { data: teamDetail, isLoading: isTeamDetailLoading } = useQuery({
   queryKey: [CLIENT_QUERY_KEY.TEAM.DETAIL],
   queryFn: () => walkClientService.QueryTeamDetail()
 });
+
+useTeamRoleSync(teamOverview);
 
 const {
   data: selectedMemberDetail,
