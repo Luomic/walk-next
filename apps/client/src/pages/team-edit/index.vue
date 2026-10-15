@@ -12,7 +12,7 @@
       <div v-if="teamDetail" :class="styles.content">
         <team-form
           :initial-value="initialFormValue"
-          :loading="isUpdateTeamInfoPending"
+          :loading="isTeamDetailFetching || isUpdateTeamInfoPending"
           :submitted="teamDetail.submitted"
           submit-label="更新信息"
           @submit="handleFormSubmit"

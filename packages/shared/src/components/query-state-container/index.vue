@@ -7,8 +7,8 @@
     @btn-click="emit('retry')"
   >
     <loading-container
-      :class="effectiveLoading && 'query-state-container'"
-      :loading="effectiveLoading"
+      :class="loading && 'query-state-container'"
+      :loading="loading"
       :text="loadingText"
     >
       <slot />
@@ -31,7 +31,7 @@ const props = withDefaults(
     error?: Error | string | null;
     /** 是否正在加载 */
     loading: boolean;
-    /** 查询到的数据。传入后会自动在有数据时抑制错误态和加载遮罩，使 refetch 时数据保持可见、刷新无感；空数组视为无数据 */
+    /** 查询到的数据。已有数据时抑制错误态：刷新失败不会把内容整页换成错误态；空数组视为无数据 */
     data?: unknown;
     /** 重试按钮文本 */
     btnText?: string;
@@ -61,7 +61,4 @@ const effectiveError = computed(() => (hasData.value ? undefined : props.error))
 
 /** 加载中或有数据时禁用错误态 */
 const effectiveDisabled = computed(() => props.loading || hasData.value);
-
-/** 有数据时隐藏加载遮罩，使 refetch 时已有数据保持可见 */
-const effectiveLoading = computed(() => props.loading && !hasData.value);
 </script>

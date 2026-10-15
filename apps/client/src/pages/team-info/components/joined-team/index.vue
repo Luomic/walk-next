@@ -73,7 +73,7 @@
       :opened="isMemberDetailPopupOpened"
       :member="selectedMemberDetail"
       :member-summary="selectedMemberSummary"
-      :loading="isSelectedMemberDetailFetching"
+      :loading="isMemberDetailOverlayVisible"
       :error="selectedMemberDetailError"
       :can-manage-member="canManageSelectedMember"
       :action-loading="isMemberActionPending"
@@ -186,6 +186,10 @@ const selectedMemberSummary = computed(() =>
 
 const canManageSelectedMember = computed(
   () => isCaptain.value && selectedMemberSummary.value?.role === "member"
+);
+
+const isMemberDetailOverlayVisible = computed(
+  () => isSelectedMemberDetailFetching.value && !selectedMemberDetail.value
 );
 // #endregion
 
