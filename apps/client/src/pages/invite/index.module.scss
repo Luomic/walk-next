@@ -4,38 +4,7 @@
 }
 
 .card {
-  max-width: min(100% - 24px, max(50vw, 15vw + 297px));
   margin: 22px auto;
-}
-
-.actionArea {
-  margin-top: 24px;
-
-  %button-base {
-    height: 52px;
-    font-size: 17px;
-    font-weight: 700;
-    color: #1f2937;
-  }
-
-  :global(
-    .van-button--primary:not(.van-button--plain):not(.van-button--small)
-  ) {
-    @extend %button-base;
-
-    background: #add81f;
-    border-color: #add81f;
-    box-shadow: 0 6px 16px rgba(173, 216, 31, 0.35);
-
-    &:active {
-      background: #add81f;
-      transform: none;
-    }
-  }
-
-  :global(.van-button--plain.van-button--primary) {
-    @extend %button-base;
-  }
 }
 
 .hint {

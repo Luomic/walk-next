@@ -95,6 +95,13 @@
       </template>
     </van-share-sheet>
 
+    <invite-preview
+      v-if="teamDetail"
+      :opened="isShareSheetShow"
+      :team-id="teamDetail.id"
+      :password="teamDetail.password"
+    />
+
     <van-popup v-model:show="isQrPopupShow" round :class="styles.qrPopup">
       <qr-code :value="shareData.url" :class="styles.qrCode" />
     </van-popup>
@@ -123,6 +130,7 @@ import {
   TEAM_INVITE_LINK_CARD_SUMMARY,
   TEAM_INVITE_MESSAGE_KEYS
 } from "@/constants";
+import InvitePreview from "@/pages/team-info/components/invite-preview/index.vue";
 import TeamPassCode from "@/pages/team-info/components/team-pass-code/index.vue";
 import { confirmAction, getErrorMessage, pickRandom, walkClientService } from "@/utils";
 
