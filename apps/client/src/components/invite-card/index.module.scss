@@ -1,4 +1,7 @@
 .shadowWrap {
+  /* 卡片宽度归组件所有，预览与邀请页所见一致；上下留白由调用方决定 */
+  max-width: min(100% - 24px, max(50vw, 15vw + 297px));
+
   filter: drop-shadow(0 10px 24px rgba(115, 74, 35, 0.18));
 }
 
@@ -95,4 +98,34 @@
   font-size: 13px;
   line-height: 1.3;
   color: #7a8471;
+}
+
+.actionArea {
+  margin-top: 24px;
+
+  %button-base {
+    height: 52px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  :global(
+    .van-button--primary:not(.van-button--plain):not(.van-button--small)
+  ) {
+    @extend %button-base;
+
+    background: #add81f;
+    border-color: #add81f;
+    box-shadow: 0 6px 16px rgba(173, 216, 31, 0.35);
+
+    &:active {
+      background: #add81f;
+      transform: none;
+    }
+  }
+
+  :global(.van-button--plain.van-button--primary) {
+    @extend %button-base;
+  }
 }

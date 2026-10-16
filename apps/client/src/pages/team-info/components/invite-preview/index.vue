@@ -6,11 +6,9 @@
       :style="layerStyle"
       aria-hidden="true"
     >
-      <team-card v-if="teamInfo" :class="styles.ticket" :team="teamInfo">
-        <div :class="styles.actionArea">
-          <van-button block type="primary">{{ $t("确认加入") }}</van-button>
-        </div>
-      </team-card>
+      <invite-card v-if="teamInfo" :class="styles.ticket" :team="teamInfo">
+        <van-button block type="primary">{{ $t("确认加入") }}</van-button>
+      </invite-card>
     </div>
   </Teleport>
 </template>
@@ -20,18 +18,16 @@ import { useQuery } from "@tanstack/vue-query";
 import { useElementBounding, useElementSize, useWindowSize } from "@vueuse/core";
 import { computed, ref, shallowRef, useTemplateRef, watch } from "vue";
 
+import InviteCard from "@/components/invite-card/index.vue";
 import { CLIENT_QUERY_KEY } from "@/constants";
-import TeamCard from "@/pages/invite/components/team-card/index.vue";
 import { walkClientService } from "@/utils";
 
 import styles from "./index.module.scss";
 
 const props = defineProps<{
-  /** 分享面板是否展开，展开时才定位并取数 */
+  /** 展开时才定位并取数 */
   opened: boolean;
-  /** 队伍 ID */
   teamId: number;
-  /** 队伍加入密码 */
   password: string;
 }>();
 
@@ -98,8 +94,9 @@ watch(
   { immediate: true }
 );
 
-// 取到队伍信息才浮现，加载中与失败都留空，浮层靠自身的透明度过渡淡入
-const isLayerVisible = computed(() => props.opened && sheetHeight.value > 0 && Boolean(teamInfo));
+const isLayerVisible = computed(
+  () => props.opened && sheetHeight.value > 0 && teamInfo.value !== undefined
+);
 
 const layerStyle = computed(() => ({
   bottom: `${anchor.value.bottom}px`,

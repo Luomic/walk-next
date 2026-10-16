@@ -25,7 +25,9 @@
         </div>
       </div>
 
-      <slot />
+      <div :class="styles.actionArea">
+        <slot />
+      </div>
     </section>
   </div>
 </template>
