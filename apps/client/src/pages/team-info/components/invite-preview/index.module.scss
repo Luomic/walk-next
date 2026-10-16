@@ -1,0 +1,38 @@
+/* 浮层只托住票据本身，票据挖出的缺口直接透出遮罩下的页面 */
+.layer {
+  position: fixed;
+  right: 0;
+  left: 0;
+  padding-bottom: 14px;
+  pointer-events: none;
+  transform-origin: bottom center;
+  transition: opacity 0.24s ease-out;
+}
+
+/* 票据取到才浮现，加载中与失败都留空，靠透明度过渡淡入淡出，不放转圈 */
+.isLayerHidden {
+  opacity: 0;
+}
+
+/* 与邀请页的卡片同宽，预览所见即受邀者所得 */
+.ticket {
+  max-width: min(100% - 24px, max(50vw, 15vw + 297px));
+  margin: 0 auto;
+}
+
+.actionArea {
+  margin-top: 24px;
+
+  /* 对齐邀请页的主按钮配色，:global 嵌套在局部类内避免样式外泄 */
+  :global(
+    .van-button--primary:not(.van-button--plain):not(.van-button--small)
+  ) {
+    height: 52px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #1f2937;
+    background: #add81f;
+    border-color: #add81f;
+    box-shadow: 0 6px 16px rgba(173, 216, 31, 0.35);
+  }
+}
