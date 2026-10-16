@@ -7,10 +7,6 @@ export interface DefaultLayoutProps {
    * @default false
    */
   showLogo?: boolean;
-  /** main 区域是否不设内边距
-   * @default false
-   */
-  noPadding?: boolean;
   /** 背景装饰图变体：default 仅顶部，topAndBottom 顶部与底部都显示
    * @default "default"
    */

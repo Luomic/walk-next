@@ -110,30 +110,13 @@
     flex-shrink: 0;
     --van-nav-bar-icon-color: var(--van-text-color-2);
   }
+}
 
-  .content {
-    @include ui.page-container;
+:where(.content) {
+  @include ui.page-container;
+}
 
-    z-index: 1;
-    flex: 1;
-    overflow-y: auto;
-    overscroll-behavior-y: contain;
-    -webkit-overflow-scrolling: touch;
-    padding-top: calc(env(safe-area-inset-top, 0px) + 16px);
-    padding-bottom: var(--bottom-safe-space, 16px);
-
-    /* 显示 Logo 时，内容向下避让 */
-    &.withLogo {
-      padding-top: calc(env(safe-area-inset-top, 0px) + 75px);
-    }
-
-    &.noPadding {
-      padding: 0;
-      padding-bottom: var(--bottom-safe-space, 0px);
-
-      &.withLogo {
-        padding-top: calc(env(safe-area-inset-top, 0px) + 75px);
-      }
-    }
-  }
+/* 显示 Logo 时，内容向下避让 */
+:where(.content.withLogo) {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 75px);
 }

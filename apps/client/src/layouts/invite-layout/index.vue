@@ -21,7 +21,7 @@
       @click-left="handleBack"
     />
 
-    <main :class="styles.content">
+    <main class="page-main" :class="styles.content">
       <slot />
     </main>
   </div>

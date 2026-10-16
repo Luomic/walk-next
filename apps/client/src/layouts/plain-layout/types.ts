@@ -3,8 +3,4 @@ export interface PlainLayoutProps {
    * @default true
    */
   showNavbar?: boolean;
-  /** main 区域是否不设内边距
-   * @default false
-   */
-  noPadding?: boolean;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="styles.page">
     <language-switcher />
 
     <div :class="styles.content">

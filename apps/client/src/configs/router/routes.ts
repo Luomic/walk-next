@@ -31,12 +31,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           pageName: "注册",
           layout: {
-            props: {
-              showNavbar: false,
-              showLogo: true,
-              noPadding: true,
-              bgDecorationVariant: "topAndBottom"
-            }
+            props: { showNavbar: false, showLogo: true, bgDecorationVariant: "topAndBottom" }
           }
         }
       },
@@ -117,11 +112,7 @@ const routes: RouteRecordRaw[] = [
         path: "edit",
         name: "team-edit",
         component: () => import("@/pages/team-edit/index.vue"),
-        meta: {
-          pageName: "修改信息",
-          allowedRoles: ["captain"],
-          layout: { props: { noPadding: true } }
-        }
+        meta: { pageName: "修改信息", allowedRoles: ["captain"] }
       }
     ]
   },
@@ -152,7 +143,7 @@ const routes: RouteRecordRaw[] = [
     path: "/feedback",
     name: "feedback",
     component: () => import("@/pages/feedback/index.vue"),
-    meta: { pageName: "反馈", layout: { name: "plain-layout", props: { noPadding: true } } }
+    meta: { pageName: "反馈", layout: { name: "plain-layout" } }
   }
 ];
 export default routes;

@@ -10,7 +10,7 @@
       @click-left="handleBack"
     />
 
-    <main :class="[styles.content, props.noPadding ? styles.noPadding : '']">
+    <main class="page-main" :class="styles.content">
       <slot />
     </main>
   </div>
@@ -27,8 +27,7 @@ import styles from "./index.module.scss";
 import type { PlainLayoutProps } from "./types";
 
 const props = withDefaults(defineProps<PlainLayoutProps>(), {
-  showNavbar: true,
-  noPadding: false
+  showNavbar: true
 });
 
 const route = useRoute();

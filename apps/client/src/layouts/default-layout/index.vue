@@ -31,13 +31,7 @@
       @click-left="handleBack"
     />
 
-    <main
-      :class="[
-        styles.content,
-        props.showLogo ? styles.withLogo : '',
-        props.noPadding ? styles.noPadding : ''
-      ]"
-    >
+    <main class="page-main" :class="[styles.content, props.showLogo ? styles.withLogo : '']">
       <slot />
     </main>
   </div>
@@ -59,7 +53,6 @@ import type { DefaultLayoutProps } from "./types";
 const props = withDefaults(defineProps<DefaultLayoutProps>(), {
   showNavbar: true,
   showLogo: false,
-  noPadding: false,
   bgDecorationVariant: "default"
 });
 
