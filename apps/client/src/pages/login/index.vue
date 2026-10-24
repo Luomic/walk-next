@@ -11,11 +11,7 @@
     <div :class="styles.content">
       <h1 :class="styles.title">{{ t("登录") }}</h1>
 
-      <login-form
-        :loading="isLoginPending"
-        @submit="handleLoginSubmit"
-        @help="showLoginHelp"
-      />
+      <login-form :loading="isLoginPending" @submit="handleLoginSubmit" @help="showLoginHelp" />
 
       <router-link
         :class="styles.registerLink"
@@ -53,8 +49,7 @@ const router = useRouter();
 const route = useRoute();
 const queryClient = useQueryClient();
 const { t } = useI18n();
-const { updateClientLoginData, refreshUserInfo } =
-  useClientUserData(queryClient);
+const { updateClientLoginData, refreshUserInfo } = useClientUserData(queryClient);
 const wrongPasswordCount = ref(0);
 
 const showLoginHelp = () => {
@@ -64,7 +59,7 @@ const showLoginHelp = () => {
       "1.“手机号”指您注册时填写的手机号\n\n 2.在校学生/教职工的密码为统一身份认证密码；校友密码为您注册时设置的密码\n\n 3.如有其他疑问，加入精弘毅行QQ群630490686以获取更多帮助",
     confirmButtonText: t("知道了"),
     theme: "round-button",
-    messageAlign: "left",
+    messageAlign: "left"
   }).catch(() => undefined);
 };
 
@@ -74,7 +69,7 @@ const { mutate: mutateLogin, isPending: isLoginPending } = useMutation({
       // eslint-disable-next-line camelcase
       account_type: /^\d{11}$/.test(value.account) ? "tel" : "stu_id",
       account: value.account,
-      password: value.password,
+      password: value.password
     }),
   onSuccess: async (data) => {
     wrongPasswordCount.value = 0;
@@ -89,18 +84,15 @@ const { mutate: mutateLogin, isPending: isLoginPending } = useMutation({
     else await router.replace({ name: "team-info" });
   },
   onError: (error: unknown) => {
-    if (
-      error instanceof RequestError &&
-      error.code === RESP_CODE.ACCOUNT_OR_PASSWORD_ERROR
-    ) {
+    if (error instanceof RequestError && error.code === RESP_CODE.ACCOUNT_OR_PASSWORD_ERROR) {
       wrongPasswordCount.value += 1;
       if (wrongPasswordCount.value >= 3) showLoginHelp();
     }
 
     showFailToast({
-      message: getErrorMessage(error, t("登录失败，请稍后重试")),
+      message: getErrorMessage(error, t("登录失败，请稍后重试"))
     });
-  },
+  }
 });
 
 const handleLoginSubmit = (value: LoginFormValue) => {
