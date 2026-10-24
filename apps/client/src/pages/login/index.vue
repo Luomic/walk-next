@@ -11,7 +11,11 @@
     <div :class="styles.content">
       <h1 :class="styles.title">{{ t("登录") }}</h1>
 
-      <login-form :loading="isLoginPending" @submit="handleLoginSubmit" @help="showLoginHelp" />
+      <login-form
+        :loading="isLoginPending"
+        @submit="handleLoginSubmit"
+        @help="showLoginHelp"
+      />
 
       <router-link
         :class="styles.registerLink"
@@ -49,7 +53,8 @@ const router = useRouter();
 const route = useRoute();
 const queryClient = useQueryClient();
 const { t } = useI18n();
-const { updateClientLoginData, refreshUserInfo } = useClientUserData(queryClient);
+const { updateClientLoginData, refreshUserInfo } =
+  useClientUserData(queryClient);
 const wrongPasswordCount = ref(0);
 
 const showLoginHelp = () => {
@@ -69,7 +74,7 @@ const { mutate: mutateLogin, isPending: isLoginPending } = useMutation({
       // eslint-disable-next-line camelcase
       account_type: /^\d{11}$/.test(value.account) ? "tel" : "stu_id",
       account: value.account,
-      password: value.password
+      password: value.password,
     }),
   onSuccess: async (data) => {
     wrongPasswordCount.value = 0;
@@ -84,13 +89,18 @@ const { mutate: mutateLogin, isPending: isLoginPending } = useMutation({
     else await router.replace({ name: "team-info" });
   },
   onError: (error: unknown) => {
-    if (error instanceof RequestError && error.code === RESP_CODE.ACCOUNT_OR_PASSWORD_ERROR) {
+    if (
+      error instanceof RequestError &&
+      error.code === RESP_CODE.ACCOUNT_OR_PASSWORD_ERROR
+    ) {
       wrongPasswordCount.value += 1;
       if (wrongPasswordCount.value >= 3) showLoginHelp();
     }
 
-    showFailToast({ message: getErrorMessage(error, t("登录失败，请稍后重试")) });
-  }
+    showFailToast({
+      message: getErrorMessage(error, t("登录失败，请稍后重试")),
+    });
+  },
 });
 
 const handleLoginSubmit = (value: LoginFormValue) => {
