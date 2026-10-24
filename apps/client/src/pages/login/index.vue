@@ -56,9 +56,10 @@ const showLoginHelp = () => {
   void showDialog({
     title: t("登录答疑"),
     message:
-      "1. “手机号”是指什么手机号\n· “手机号”是指您注册时填写的手机号\n\n2. 密码是指什么密码\n· 如果你是在校学生/教职工，你的密码是统一认证的密码\n· 如果你是校友，密码是你注册时预设的密码\n\n3. 有问题可以去哪里求助\n· 加入精弘毅行群 630490686，询问相关工作人员",
+      "1.“手机号”指您注册时填写的手机号\n\n 2.在校学生/教职工的密码为统一身份认证密码；校友密码为您注册时设置的密码\n\n 3.如有其他疑问，加入精弘毅行QQ群630490686以获取更多帮助",
     confirmButtonText: t("知道了"),
-    theme: "round-button"
+    theme: "round-button",
+    messageAlign: "left"
   }).catch(() => undefined);
 };
 
@@ -88,7 +89,9 @@ const { mutate: mutateLogin, isPending: isLoginPending } = useMutation({
       if (wrongPasswordCount.value >= 3) showLoginHelp();
     }
 
-    showFailToast({ message: getErrorMessage(error, t("登录失败，请稍后重试")) });
+    showFailToast({
+      message: getErrorMessage(error, t("登录失败，请稍后重试"))
+    });
   }
 });
 
