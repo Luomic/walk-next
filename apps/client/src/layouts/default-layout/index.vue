@@ -19,8 +19,6 @@
       ]"
     />
 
-    <img v-if="props.showLogo" :src="logo" alt="Logo" :class="styles.topLogo" />
-
     <van-nav-bar
       v-if="props.showNavbar && pageTitle"
       :title="pageTitle"
@@ -32,6 +30,7 @@
     />
 
     <main class="page-main" :class="[styles.content, props.showLogo ? styles.withLogo : '']">
+      <img v-if="props.showLogo" :src="logo" alt="Logo" :class="styles.topLogo" />
       <slot />
     </main>
   </div>

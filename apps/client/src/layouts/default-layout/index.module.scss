@@ -37,10 +37,11 @@
 
   /* Logo 自身带虚化光晕：图案只绘制在中央内容区，外扩的 padding 用于承载羽化渐隐 */
   .topLogo {
-    flex-shrink: 0;
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 2px);
+    left: 2px;
     z-index: 3;
     box-sizing: border-box;
-    margin: calc(env(safe-area-inset-top, 0px) + 2px) 0 0 2px;
     width: 124px;
     height: 67px;
     padding: 14px;
@@ -115,7 +116,7 @@
   @include ui.page-container;
 }
 
-/* Logo 已承载顶部安全区，内容仅保留基础间距 */
+/* 为随内容滚动的 Logo 预留初始空间 */
 :where(.content.withLogo) {
-  padding-top: 16px;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 85px);
 }
