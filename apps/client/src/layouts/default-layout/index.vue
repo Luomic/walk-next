@@ -1,23 +1,7 @@
 <template>
-  <div :class="styles.layout">
-    <img
-      :src="bgTop"
-      alt=""
-      :class="[
-        styles.bgDecoration,
-        styles.top,
-        props.bgDecorationVariant === 'default' ? styles.topOnly : ''
-      ]"
-    />
-    <img
-      :src="bgBottom"
-      alt=""
-      :class="[
-        styles.bgDecoration,
-        styles.bottom,
-        props.bgDecorationVariant === 'default' ? styles.topOnly : ''
-      ]"
-    />
+  <div :class="[styles.layout, props.bgDecorationVariant === 'default' && styles.topOnly]">
+    <img :src="bgTop" alt="" :class="[styles.bgDecoration, styles.top]" />
+    <img :src="bgBottom" alt="" :class="[styles.bgDecoration, styles.bottom]" />
 
     <van-nav-bar
       v-if="props.showNavbar && pageTitle"
@@ -29,7 +13,7 @@
       @click-left="handleBack"
     />
 
-    <main class="page-main" :class="[styles.content, props.showLogo ? styles.withLogo : '']">
+    <main class="page-main" :class="[styles.content, props.showLogo && styles.withLogo]">
       <img v-if="props.showLogo" :src="logo" alt="Logo" :class="styles.topLogo" />
       <slot />
     </main>
