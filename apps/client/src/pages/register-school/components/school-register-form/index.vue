@@ -29,6 +29,39 @@
     </div>
 
     <div :class="styles.fieldGroup">
+      <div :class="styles.labelRow">
+        <label :class="styles.fieldLabel">{{ t("密码") }}</label>
+        <help-button
+          :class="styles.helpButton"
+          :title="t('密码提示')"
+          :message="t('统一身份认证密码是您登录学校统一身份认证系统的密码')"
+        />
+      </div>
+      <van-field
+        v-model="formValue.password"
+        :class="styles.fieldInput"
+        :rules="createRequiredRuleWithMessage(t('请输入密码'))"
+        :type="isPasswordVisible ? 'text' : 'password'"
+        name="password"
+        maxlength="60"
+        :placeholder="t('请输入统一身份认证密码')"
+        autocomplete="new-password"
+        clearable
+      >
+        <template #right-icon>
+          <button
+            :class="styles.eyeButton"
+            type="button"
+            :aria-label="t('切换密码显示')"
+            @click.stop="togglePasswordVisible()"
+          >
+            <van-icon :name="isPasswordVisible ? 'eye-o' : 'closed-eye'" />
+          </button>
+        </template>
+      </van-field>
+    </div>
+
+    <div :class="styles.fieldGroup">
       <label :class="styles.fieldLabel">{{ t("户籍") }}</label>
       <van-field :class="styles.fieldInput" name="home">
         <template #input>
@@ -68,39 +101,6 @@
         autocomplete="tel"
         clearable
       />
-    </div>
-
-    <div :class="styles.fieldGroup">
-      <div :class="styles.labelRow">
-        <label :class="styles.fieldLabel">{{ t("密码") }}</label>
-        <help-button
-          :class="styles.helpButton"
-          :title="t('密码提示')"
-          :message="t('统一身份认证密码是您登录学校统一身份认证系统的密码')"
-        />
-      </div>
-      <van-field
-        v-model="formValue.password"
-        :class="styles.fieldInput"
-        :rules="createRequiredRuleWithMessage(t('请输入密码'))"
-        :type="isPasswordVisible ? 'text' : 'password'"
-        name="password"
-        maxlength="60"
-        :placeholder="t('请输入统一身份认证密码')"
-        autocomplete="new-password"
-        clearable
-      >
-        <template #right-icon>
-          <button
-            :class="styles.eyeButton"
-            type="button"
-            :aria-label="t('切换密码显示')"
-            @click.stop="togglePasswordVisible()"
-          >
-            <van-icon :name="isPasswordVisible ? 'eye-o' : 'closed-eye'" />
-          </button>
-        </template>
-      </van-field>
     </div>
 
     <div :class="styles.fieldGroup">
