@@ -258,3 +258,7 @@ QQ 空间: Qzone
 team.invite.card-title: 'Trailwalk Together! The "{name}" team awaits you | Jinghong Trailwalk'
 team.invite.message-1: '[Jinghong Trailwalk] The "{name}" team is one short of you! Complete the trailwalk together — tap the link to join us 👇'
 team.invite.message-2: '[Jinghong Trailwalk] The "{name}" team welcomes you! Walk the full route together, waiting for you to join 💪'
+团队名称与口号将公开展示，请文明填写: Team names and slogans are publicly visible. Please keep them appropriate.
+修改密码后，已生成的邀请链接和二维码会失效，已加入的队员不受影响: Changing the password invalidates existing invitation links and QR codes. Members who have already joined are unaffected.
+邀请链接与二维码会在修改密码后失效，已加入的队员不受影响: Invitation links and QR codes will be invalidated when the password is changed. Members who have already joined are unaffected.
+随机队友无需密码即可加入: Random teammates can join without a password.
