@@ -16,7 +16,7 @@
           <span :class="styles.badgeLabel">{{ $t("团队人数") }}</span>
         </div>
         <div v-if="phaseTitle" :class="styles.badge">
-          <span :class="styles.badgeValue">{{ phaseTitle }}</span>
+          <span :class="styles.badgeValue">{{ $t(phaseTitle) }}</span>
           <span :class="styles.badgeLabel">{{ $t("当前阶段") }}</span>
         </div>
         <div :class="styles.badge">
