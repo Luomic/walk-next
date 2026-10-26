@@ -1,8 +1,8 @@
 <template>
   <div :class="styles.layout">
     <van-nav-bar
-      v-if="props.showNavbar && pageTitle"
-      :title="pageTitle"
+      v-if="props.showNavbar && route.meta.pageName"
+      :title="$t(route.meta.pageName)"
       left-arrow
       safe-area-inset-top
       :left-disabled="isNavigationPending"
@@ -18,7 +18,6 @@
 
 <script setup lang="ts">
 import { useRouterState } from "shared";
-import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 import { useBackHandler } from "@/composables";
@@ -33,6 +32,4 @@ const props = withDefaults(defineProps<PlainLayoutProps>(), {
 const route = useRoute();
 const { isNavigationPending } = useRouterState();
 const handleBack = useBackHandler();
-
-const pageTitle = computed(() => route.meta.pageName);
 </script>

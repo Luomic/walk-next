@@ -4,8 +4,8 @@
     <img :src="bgBottom" alt="" :class="[styles.bgDecoration, styles.bottom]" />
 
     <van-nav-bar
-      v-if="props.showNavbar && pageTitle"
-      :title="pageTitle"
+      v-if="props.showNavbar && route.meta.pageName"
+      :title="$t(route.meta.pageName)"
       left-arrow
       safe-area-inset-top
       :left-disabled="isNavigationPending"
@@ -22,7 +22,6 @@
 
 <script setup lang="ts">
 import { useRouterState } from "shared";
-import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 import logo from "@/assets/images/logo.png";
@@ -42,6 +41,4 @@ const props = withDefaults(defineProps<DefaultLayoutProps>(), {
 const route = useRoute();
 const { isNavigationPending } = useRouterState();
 const handleBack = useBackHandler();
-
-const pageTitle = computed(() => route.meta.pageName);
 </script>

@@ -11,8 +11,8 @@
     </span>
 
     <van-nav-bar
-      v-if="pageTitle"
-      :title="pageTitle"
+      v-if="route.meta.pageName"
+      :title="$t(route.meta.pageName)"
       left-arrow
       safe-area-inset-top
       :border="false"
@@ -29,7 +29,6 @@
 
 <script setup lang="ts">
 import { useRouterState } from "shared";
-import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 import { useBackHandler } from "@/composables";
@@ -40,6 +39,4 @@ import pattern from "./pattern-dash-line.svg";
 const route = useRoute();
 const { isNavigationPending } = useRouterState();
 const handleBack = useBackHandler();
-
-const pageTitle = computed(() => route.meta.pageName);
 </script>
