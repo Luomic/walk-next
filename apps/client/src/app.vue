@@ -12,6 +12,8 @@
 </template>
 
 <script setup lang="ts">
+import "@vant/touch-emulator";
+
 import { useEventListener } from "@vueuse/core";
 import { type Component, computed, defineAsyncComponent } from "vue";
 import { useRoute } from "vue-router";
