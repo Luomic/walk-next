@@ -36,7 +36,6 @@
   opacity: 0;
 }
 
-/* Logo 自身带虚化光晕：图案只绘制在中央内容区，外扩的 padding 用于承载羽化渐隐 */
 .topLogo {
   position: absolute;
   top: calc(env(safe-area-inset-top, 0px) + 2px);
@@ -50,29 +49,6 @@
   object-fit: contain;
   pointer-events: none;
   user-select: none;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  -webkit-mask-image: var(--mask-gradient);
-  mask-image: var(--mask-gradient);
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
-
-  /* 两份羽化渐变取交集；8px 羽化小于 14px 内边距，不触及图案 */
-  --mask-gradient:
-    linear-gradient(
-      to right,
-      transparent,
-      #000 8px,
-      #000 calc(100% - 12px),
-      transparent
-    ),
-    linear-gradient(
-      to bottom,
-      transparent,
-      #000 8px,
-      #000 calc(100% - 12px),
-      transparent
-    );
 }
 
 /* 横屏时显式高度压扁（SVG 内的 preserveAspectRatio="none" 保证满宽拉伸）；
