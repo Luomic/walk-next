@@ -141,6 +141,12 @@
     color: #734a23;
   }
 
+  .cardSpinner {
+    position: relative;
+    flex-shrink: 0;
+    margin-inline-end: auto;
+  }
+
   .cardArrow {
     position: relative;
     display: grid;

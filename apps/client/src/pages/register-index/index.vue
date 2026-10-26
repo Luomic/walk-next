@@ -16,6 +16,12 @@
         >
           <component :is="option.icon" :class="styles.cardIcon" aria-hidden="true" />
           <span :class="styles.cardName">{{ $t(option.name) }}</span>
+          <van-loading
+            v-if="leavingRoute === option.route"
+            :class="styles.cardSpinner"
+            size="20"
+            color="#8a6136"
+          />
           <van-icon :class="styles.cardArrow" name="arrow" />
         </button>
       </div>
@@ -62,10 +68,13 @@ const cardViewName = (target: string, index: number) => {
 };
 
 const leave = async (name: string, lead: string | null) => {
+  if (lead === null) return router.replace({ name, query: route.query });
   if (isLeaving.value) return;
   isLeaving.value = true;
   leavingRoute.value = lead;
   try {
+    const loader = router.resolve({ name }).matched.at(-1)?.components?.default;
+    if (typeof loader === "function") await (loader as () => Promise<unknown>)();
     await ((func: () => Promise<unknown>) => {
       if (isVTSupported.value && preferredMotion.value === "no-preference")
         return document.startViewTransition(func).finished;
