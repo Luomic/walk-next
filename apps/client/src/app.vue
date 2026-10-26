@@ -14,8 +14,10 @@
 <script setup lang="ts">
 import "@vant/touch-emulator";
 
-import { useEventListener } from "@vueuse/core";
-import { type Component, computed, defineAsyncComponent } from "vue";
+import { refDebounced, useEventListener } from "@vueuse/core";
+import { useRouterState } from "shared";
+import { closeToast, showLoadingToast } from "vant";
+import { type Component, computed, defineAsyncComponent, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import ErrorBoundary from "@/components/error-boundary/index.vue";
@@ -50,4 +52,12 @@ useEventListener(document, "click", (event) => {
 useTitleMeta();
 setupClientUserDataQuery();
 setupClientNoticeQuery();
+
+const { isNavigationPending: navPending } = useRouterState();
+const navToastVisible = refDebounced(navPending, () => (navPending.value ? 200 : 0));
+
+watch(navToastVisible, (show) => {
+  if (show) showLoadingToast({ duration: 0, forbidClick: true });
+  else closeToast();
+});
 </script>
