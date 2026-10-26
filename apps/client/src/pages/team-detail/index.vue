@@ -12,6 +12,7 @@
       <query-state-container
         :error="teamDetailError"
         :loading="isTeamDetailLoading"
+        :btn-text="t('重试')"
         :loading-text="t('refresh.loading')"
         :empty-description="t('暂无团队详细信息')"
         @retry="handleTeamDetailRetry"

@@ -2,7 +2,12 @@
   <section :class="styles.teamList">
     <p :class="styles.countText">{{ $t("共找到{n}支队伍", { n: displayedTeams.length }) }}</p>
 
-    <error-empty :error="props.error" :disabled="props.loading" @btn-click="emit('retry')">
+    <error-empty
+      :error="props.error"
+      :disabled="props.loading"
+      :btn-text="$t('重试')"
+      @btn-click="emit('retry')"
+    >
       <van-pull-refresh
         :model-value="props.isRefetching && !props.isButtonRefetching"
         :disabled="props.loading || props.isButtonRefetching"
