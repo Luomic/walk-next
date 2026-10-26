@@ -105,6 +105,22 @@
 
     <div :class="styles.fieldGroup">
       <label :class="styles.fieldLabel">
+        {{ t("微信") }}
+        <span :class="styles.optionalTag">{{ t("选填") }}</span>
+      </label>
+      <van-field
+        v-model="formValue.wechat"
+        :class="styles.fieldInput"
+        name="wechat"
+        maxlength="64"
+        :placeholder="t('请输入微信')"
+        autocomplete="off"
+        clearable
+      />
+    </div>
+
+    <div :class="styles.fieldGroup">
+      <label :class="styles.fieldLabel">
         {{ t("QQ") }}
         <span :class="styles.optionalTag">{{ t("选填") }}</span>
       </label>
@@ -115,22 +131,6 @@
         maxlength="20"
         inputmode="numeric"
         :placeholder="t('请输入QQ')"
-        autocomplete="off"
-        clearable
-      />
-    </div>
-
-    <div :class="styles.fieldGroup">
-      <label :class="styles.fieldLabel">
-        {{ t("微信") }}
-        <span :class="styles.optionalTag">{{ t("选填") }}</span>
-      </label>
-      <van-field
-        v-model="formValue.wechat"
-        :class="styles.fieldInput"
-        name="wechat"
-        maxlength="64"
-        :placeholder="t('请输入微信')"
         autocomplete="off"
         clearable
       />
